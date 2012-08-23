@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,33 +21,23 @@ namespace PonyApp {
 
 	public partial class MainWindow:Window {
 
-		private Pony Pony;
+		private ArrayList PonyList;
 
 		public MainWindow() {
 			InitializeComponent();
 
-			// enable moving the window by dragging anywhere.
-			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
-
-			// set the window position.
-			this.Left = 0;
-			this.Top = 0;
-			this.Width = 1;
-			this.Height = 1;
-			this.Topmost = true;
-			this.Title = "Pony";
-
-			// go pony go
-			this.Pony = new Pony("Rarity");
-			this.Pony.SetWindow(this);
-			this.Pony.TellWhatDo(Pony.TROT,Pony.RIGHT);
-
+			// go pony go.
+			this.PonyList = new ArrayList();
+			this.StartPony("Rarity");
 		}
 
-		/* handle dragging the window since we cannot do that with the title bar
-		 * removed from the form. */
-		private void OnWindowDragAction(Object sender,MouseButtonEventArgs e) {
-			DragMove();
+		public void StartPony(string name) {
+			Pony pone;
+
+			pone = new Pony(name);
+			pone.TellWhatDo(Pony.TROT,Pony.RIGHT);
+
+			this.PonyList.Add(pone);
 		}
 
 	}

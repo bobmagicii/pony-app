@@ -45,7 +45,7 @@ namespace PonyApp {
 		private int Direction;
 
 		// physical properties
-		private MainWindow Window;
+		private PonyWindow Window;
 		private BitmapImage Image;
 		private Random RNG;
 
@@ -71,15 +71,8 @@ namespace PonyApp {
 			this.ChoiceTimer = null;
 			this.WindowTimer = null;
 
+			this.Window = new PonyWindow(this);
 			this.RNG = new Random();
-		}
-
-		/* void SetWindow(Window window);
-		 * Assign a window for this pony to manipulate. do this immediately
-		 * after creating a new instance or your face will explode. */
-
-		public void SetWindow(MainWindow win) {
-			this.Window = win;
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -263,7 +256,7 @@ namespace PonyApp {
 		 */
 
 		private void Trot() {
-			this.WindowTimer = new DispatcherTimer(DispatcherPriority.Normal, this.Window.Dispatcher);
+			this.WindowTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
 			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(25);
 			this.WindowTimer.Tick += new EventHandler(this.TrotTick);
 			this.WindowTimer.Start();
@@ -332,7 +325,7 @@ namespace PonyApp {
 			// update the window.
 			this.Window.Width = this.Image.Width;
 			this.Window.Height = this.Image.Height;
-			ImageBehavior.SetAnimatedSource(this.Window.PonyImage, this.Image);
+			ImageBehavior.SetAnimatedSource(this.Window.Image, this.Image);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////
