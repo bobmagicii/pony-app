@@ -43,26 +43,37 @@ namespace PonyApp {
 			DragMove();
 		}
 
-		private void OnContextMenuOpen(object sender, RoutedEventArgs e) {
+		private void OnDoubleClick(object sender, MouseButtonEventArgs e) {
+			Trace.WriteLine("~~ window was double clicked");
+			this.Pony.ClingToggle();
+		}
+
+		private void OnMouseOver(object sender, MouseEventArgs e) {
 			this.Pony.PauseAction();
 		}
 
-		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
-			// i think i can count on this always firing after the onclick's
-			// of menu items?
-
-			if(this.Pony.GetMode() != Pony.BE_STILL)
+		private void OnMouseOut(object sender, MouseEventArgs e) {
 			this.Pony.ResumeAction();
+		}
+
+		private void OnContextMenuOpen(object sender, RoutedEventArgs e) {
+			
+		}
+
+		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
+
 		}
 
 		private void TellHoldToRight(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony to hold short to the right");
+			this.Pony.PauseAction();
 			this.Pony.SetMode(Pony.BE_STILL);
 			this.Pony.TellWhatDo(Pony.TROT,Pony.RIGHT);
 		}
 
 		private void TellHoldToLeft(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony to hold short to the left");
+			this.Pony.PauseAction();
 			this.Pony.SetMode(Pony.BE_STILL);
 			this.Pony.TellWhatDo(Pony.TROT, Pony.LEFT);
 		}

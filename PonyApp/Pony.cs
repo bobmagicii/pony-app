@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -51,6 +52,9 @@ namespace PonyApp {
 		// time.
 		public const int BE_STILL = 2;
 
+		// she really loves you.
+		public const int BE_CLINGY = 3;
+
 		///////////////////////////////////////////////////////////////////////
 		// instance properties ////////////////////////////////////////////////
 
@@ -76,20 +80,27 @@ namespace PonyApp {
 		// time till bordem basically.
 		private DispatcherTimer ChoiceTimer;
 
+		// this timer is for clingy mode for how often she checks to see where
+		// you are.
+		private DispatcherTimer ClingTimer;
+
 		/* constructor Pony(string name);
 		 * constructs. give it a pony name. */
 
 		public Pony(String name) {
 			this.Name = name;
-			this.Action = Pony.TROT;
+			this.Action = 0;
 			this.Direction = 0;
 			this.Mode = Pony.BE_FREE;
 
 			this.ChoiceTimer = null;
 			this.WindowTimer = null;
+			this.ClingTimer = null;
 
 			this.Window = new PonyWindow(this);
 			this.RNG = new Random();
+
+			this.ChooseWhatDo();
 		}
 
 		public int GetMode() {
@@ -332,6 +343,18 @@ namespace PonyApp {
 		 */
 
 		public void ResumeAction() {
+
+			// if the pony is doing something active while told to be still
+			// she might still be performing an action to prepare. we don not
+			// want to distract her. (e.g. mousing out while holding short)
+			if(this.IsActionActive() && this.Mode == Pony.BE_STILL)
+				return;
+
+			// if she is being clingy then she is too busy to get distracted
+			// and wander around.
+			if(this.Mode == Pony.BE_CLINGY)
+				return;
+
 			if(!this.ChoiceTimer.IsEnabled) {
 				Trace.WriteLine("<< pony left to her own devices");
 				this.ChoiceTimer.Start();
@@ -340,6 +363,58 @@ namespace PonyApp {
 
 		///////////////////////////////////////////////////////////////////////
 		// actual action methods //////////////////////////////////////////////
+
+		/* CLINGY MODE
+		 * omg why u keep follow me
+		 */
+		
+		public void ClingToggle() {
+			if(this.Mode == Pony.BE_CLINGY) {
+				this.ClingStop();
+			} else {
+				this.ClingStart();
+			}
+		}
+
+		private void ClingStart() {
+			this.StopAction();
+			this.PauseAction();
+
+			this.Mode = Pony.BE_CLINGY;
+			this.ClingTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle,this.Window.Dispatcher);
+			this.ClingTimer.Interval = TimeSpan.FromMilliseconds(100);
+			this.ClingTimer.Tick += new EventHandler(this.ClingTick);
+			this.ClingTimer.Start();
+		}
+
+		private void ClingStop() {
+			this.Mode = Pony.BE_FREE;
+
+			this.ClingTimer.Stop();
+			this.ClingTimer = null;
+
+			this.ResumeAction();
+		}
+
+		private void ClingTick(Object sender, EventArgs e) {
+
+			double dist = ((this.Window.Left + (this.Window.Width / 2)) - System.Windows.Forms.Control.MousePosition.X);
+
+			if(dist < 0 && Math.Abs(dist) >= this.Window.Width) {
+				this.TellWhatDo(Pony.TROT,Pony.RIGHT);
+			} else if(dist < 0) {
+				this.TellWhatDo(Pony.STAND,Pony.RIGHT);
+			}
+
+			if(dist > 0 && Math.Abs(dist) >= this.Window.Width) {
+				this.TellWhatDo(Pony.TROT,Pony.LEFT);
+			} else if(dist > 0) {
+				this.TellWhatDo(Pony.STAND, Pony.LEFT);
+			}
+
+
+			Trace.WriteLine("mouse distance: " + dist);
+		}
 
 		/*
 		 * STANDING
@@ -357,7 +432,7 @@ namespace PonyApp {
 
 		private void Trot() {
 			this.WindowTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
-			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(25);
+			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(20);
 			this.WindowTimer.Tick += new EventHandler(this.TrotTick);
 			this.WindowTimer.Start();
 		}
@@ -371,6 +446,7 @@ namespace PonyApp {
 
 					if(this.Mode == Pony.BE_STILL) {
 						this.TellWhatDo(Pony.STAND, this.Direction);
+						this.ResumeAction();
 					} else {
 						this.Direction = Pony.LEFT;
 						this.LoadImage();
@@ -388,6 +464,7 @@ namespace PonyApp {
 
 					if(this.Mode == Pony.BE_STILL) {
 						this.TellWhatDo(Pony.STAND, this.Direction);
+						this.ResumeAction();
 					} else {
 						this.Direction = Pony.RIGHT;
 						this.LoadImage();
