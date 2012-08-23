@@ -27,6 +27,15 @@ namespace PonyApp {
 		// directions.
 		public const int RIGHT = 1;
 		public const int LEFT = 2;
+
+		public static bool IsActionActive(int action) {
+			switch(action) {
+				case Pony.TROT:
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 
 	public partial class MainWindow:Window {
@@ -99,6 +108,33 @@ namespace PonyApp {
 
 		}
 
+		/* void MainWindow.ChooseWhatToDo(int action, int direction);
+		 * this version of the method is the authority. what it is told is what
+		 * the pony is made to do */
+
+		private void ChooseWhatDo(int action,int direction) {
+			this.CurrentActionStop();
+
+			this.CurrentAction = action;
+			this.CurrentDirection = direction;
+
+			switch(action) {
+				case Pony.TROT:
+					this.Trot(direction);
+					break;
+
+				case Pony.STAND:
+					this.Stand(direction);
+					break;
+			}
+
+			Trace.WriteLine("choice: " + this.CurrentAction.ToString() + ":" + this.CurrentDirection.ToString());
+		}
+
+		/* void MainWindow.ChooseWhatToDo(Object sender EventArgs event);
+		 * this version of the method is for calling by the ChoiceTimer. It resets
+		 * the choice timer and then allows the pony to decide what to do. */
+
 		private void ChooseWhatDo(Object s,EventArgs e) {
 			int time = 0;
 			Random rng = new Random();
@@ -118,30 +154,22 @@ namespace PonyApp {
 			this.ChoiceTimer.Start();
 		}
 
+		/* void MainWindow.ChooseWhatToDo(void);
+		 * this version of the method is the default to allow the pony to decide
+		 * what it wants to do next. */
+
 		private void ChooseWhatDo() {
-			this.CurrentActionStop();
-			this.ChoiceByPersonality();
-			this.ChooseWhatDo(this.CurrentAction,this.CurrentDirection);
+			int[] choice = this.ChoiceByPersonality();
+			this.ChooseWhatDo(choice[0],choice[1]);
 		}
 
-		private void ChooseWhatDo(int action,int direction) {
-			this.CurrentAction = action;
-			this.CurrentDirection = direction;
+		/* int-array MainWindow.ChoiceByPersonality(void);
+		 * choose what to do based on the pony personality. at the moment i only
+		 * have one personality, the personality i want. it will choose the new
+		 * action and direction. Returns an array 0 being the action she selected
+		 * and 1 being the direction chosen. */
 
-			switch(action) {
-				case Pony.TROT:
-					this.Trot(direction);
-					break;
-
-				case Pony.STAND:
-					this.Stand(direction);
-					break;
-			}
-
-			Trace.WriteLine("choice: " + this.CurrentAction.ToString() + ":" + this.CurrentDirection.ToString());
-		}
-
-		public void ChoiceByPersonality() {
+		private int[] ChoiceByPersonality() {
 			Random rng = new Random();
 			bool undecided = false;
 			int action = 0;
@@ -151,30 +179,36 @@ namespace PonyApp {
 
 				action = rng.Next(1,3);
 				direction = rng.Next(1,3);
+				undecided = false;
 
-				switch(action) {
-					// pony generally like be lazy. if we selected trot
-					// there is a 50% chance the pony would rather stand.
-					case Pony.TROT:
-						if(rng.Next(1,101) <= 20) action = Pony.STAND;
-						break;
+				// pony generally like be lazy. if she is doing somethng lazy there is a
+				// greater chance she will not want to do something active.
+				if(Pony.IsActionActive(action) && !Pony.IsActionActive(this.CurrentAction)) {
+					undecided = true;
 				}
 
-				// pony does not like to change directions that often.
-				// there is a 75%  chanceshe will not.
-				if((this.CurrentAction == Pony.STAND && action == Pony.STAND) || (this.CurrentAction == Pony.TROT && this.CurrentDirection != direction)) {
-					if(this.CurrentDirection != direction) {
-						if(rng.Next(1,101) <= 30) {
-							direction = this.CurrentDirection;
-						}
+				// if pony is doing something active and will continue to do so then there
+				// is a higher chance she will not change directions.
+				if(Pony.IsActionActive(action) && Pony.IsActionActive(this.CurrentAction)) {
+					if(rng.Next(1,101) <= 70) {
+						direction = this.CurrentDirection;
+					}
+				}
+
+				// if pony is doing something active and she suddenly stops then this too
+				// will have a greater chance of not changing directions.
+				if(Pony.IsActionActive(action) && !Pony.IsActionActive(this.CurrentAction)) {
+					if(rng.Next(1,101) <= 70) {
+						direction = this.CurrentDirection;
 					}
 				}
 
 			} while(undecided);
 
-			this.CurrentAction = action;
-			this.CurrentDirection = direction;
-
+			int[] choice = new int[2];
+			choice[0] = action;
+			choice[1] = direction;
+			return choice;
 		}
 
 		/*
