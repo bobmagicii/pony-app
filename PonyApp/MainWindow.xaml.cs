@@ -18,28 +18,7 @@ using WpfAnimatedGif;
 
 namespace PonyApp {
 
-	public class Pony {
-
-		// actions.
-		public const int TROT = 1;
-		public const int STAND = 2;
-
-		// directions.
-		public const int RIGHT = 1;
-		public const int LEFT = 2;
-
-		public static bool IsActionActive(int action) {
-			switch(action) {
-				case Pony.TROT:
-					return true;
-				default:
-					return false;
-			}
-		}
-	}
-
 	public partial class MainWindow:Window {
-
 
 		// this timer is for moving the window around. unfortunately if the pc is too busy
 		// or i set it too fast, it slow down the gif rendering quite a bit as it shares
