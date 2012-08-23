@@ -15,7 +15,8 @@ just type "google whatever" she starts up chrome and does it.
 This is a Visual C# Project. I don't know jack about what I am doing.
 Therefore I COMMITED ALL THE THINGS to the Githubs including that
 solution and options file and whatever else is in this cluster folder.
-If that was wrong oh well.
+If that was wrong oh well. I don't even know WTF a solution is. Where
+I come from the solution is `gcc app.c -o app` and you're done. So.
 
 I have never written a line of C# in my life until now. This could be
 the worst application ever written in that language I have no clue.
