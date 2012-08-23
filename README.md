@@ -7,8 +7,22 @@ was too... busy... for what I wanted. I also didn't want ponies all
 over my bloody desktop. I just want the one to traverse across the
 taskbar.
 
+http://www.youtube.com/watch?v=fdITEc4gmpo&hd=1
+
 Eventually I want to make her do work for me, like if I click her and
 just type "google whatever" she starts up chrome and does it.
+
+## Application Features
+
+ * Pony
+ 
+## Feature Detail
+
+ * She wanders across the taskbar as she wants to.
+ * You can right click and tell her to stand off to the left or right
+   side of the screen. She'll trot over there and stay pretty off in
+   the corner.
+ * If you pet her too much (double click) she becomes clingy...
 
 ## Technical Blah Blah Blah
 
@@ -29,8 +43,6 @@ rimshot.wav
 That joke aside, it actually is an interesting language. So far I am
 enjoying myself... but I'm also getting a pony out of it as a reward
 so that might just be a novelty feeling.
-
-http://www.youtube.com/watch?v=fdITEc4gmpo&hd=1
 
 The only reason I went with C# was because GTK still does not support
 RGBA colormaps on Windows. Durr. This would have been a PHP-GTK app
