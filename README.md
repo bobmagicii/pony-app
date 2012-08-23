@@ -30,6 +30,8 @@ That joke aside, it actually is an interesting language. So far I am
 enjoying myself... but I'm also getting a pony out of it as a reward
 so that might just be a novelty feeling.
 
+http://www.youtube.com/watch?v=fdITEc4gmpo&hd=1
+
 The only reason I went with C# was because GTK still does not support
 RGBA colormaps on Windows. Durr. This would have been a PHP-GTK app
 if not for that. Windows WPF was the only thing that would render a
