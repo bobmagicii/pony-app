@@ -64,7 +64,7 @@ namespace PonyApp {
 
 			// go pony go
 			this.ChooseWhatDo(Pony.TROT,Pony.RIGHT);
-			this.Top = this.ScreenHeight - (32 + this.Height);
+			this.Top = this.ScreenHeight - (34 + this.Height);
 
 			// setup a timer for choosing what to do.
 			this.ChoiceTimer = new DispatcherTimer(DispatcherPriority.Normal,this.Dispatcher);
@@ -163,23 +163,19 @@ namespace PonyApp {
 				// pony generally like be lazy. if she is doing somethng lazy there is a
 				// greater chance she will not want to do something active.
 				if(Pony.IsActionActive(action) && !Pony.IsActionActive(this.CurrentAction)) {
-					undecided = true;
+					if(rng.Next(1,101) <= 25) undecided = true;
 				}
 
 				// if pony is doing something active and will continue to do so then there
 				// is a higher chance she will not change directions.
 				if(Pony.IsActionActive(action) && Pony.IsActionActive(this.CurrentAction)) {
-					if(rng.Next(1,101) <= 70) {
-						direction = this.CurrentDirection;
-					}
+					if(rng.Next(1,101) <= 70) direction = this.CurrentDirection;
 				}
 
 				// if pony is doing something active and she suddenly stops then this too
 				// will have a greater chance of not changing directions.
-				if(Pony.IsActionActive(action) && !Pony.IsActionActive(this.CurrentAction)) {
-					if(rng.Next(1,101) <= 70) {
-						direction = this.CurrentDirection;
-					}
+				if(!Pony.IsActionActive(action) && Pony.IsActionActive(this.CurrentAction)) {
+					if(rng.Next(1,101) <= 70) direction = this.CurrentDirection;
 				}
 
 			} while(undecided);
