@@ -31,6 +31,10 @@ just type "google whatever" she starts up chrome and does it.
  * Some ponies need more animations... Like Rarity has no sleep
    animation even though Rainbow Dash and some others do. Its just a
    pile of GIF files from that other project *shrug*
+ * Figure out why WpfAnimatedGif has what appear to be issues loading
+   GIF files from a directory. Only got it working with embedded
+   resources atm.
+ * After that, config files to add more ponies.
  
 ## Technical Blah Blah Blah
 
