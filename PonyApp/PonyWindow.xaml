@@ -4,6 +4,13 @@
 	   xmlns:gif="http://wpfanimatedgif.codeplex.com"
         Title="Pony" Height="256" Width="256" WindowStyle="None" AllowsTransparency="True" Background="#00000000" Icon="/PonyApp;component/Resources/Rarity/StandRight.gif">
 	<Grid Name="MainGrid">
-		<Image Name="Image" Width="200" Height="200"  Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center" />
+		<Image Name="Image" Width="200" Height="200"  Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center">
+			<Image.ContextMenu>
+				<ContextMenu Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
+					<MenuItem Header="Stand off to the Right" />
+					<MenuItem Header="Stand off to the Left" />
+				</ContextMenu>
+			</Image.ContextMenu>
+		</Image>
 	</Grid>
 </Window>

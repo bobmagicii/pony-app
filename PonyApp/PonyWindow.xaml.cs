@@ -42,6 +42,14 @@ namespace PonyApp {
 			DragMove();
 		}
 
+		private void OnContextMenuOpen(object sender, RoutedEventArgs e) {
+			this.Pony.PauseAction();
+		}
+
+		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
+			this.Pony.ResumeAction();
+		}
+
 	}
 
 }

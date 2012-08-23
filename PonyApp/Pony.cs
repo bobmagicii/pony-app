@@ -36,6 +36,21 @@ namespace PonyApp {
 		public const int RIGHT = 1;
 		public const int LEFT = 2;
 
+		/* pony modes.
+		 * different modes for requesting she behaves decent when visiting
+		 * your parents for the first time.
+		 * 
+		 * note: stagger these so they can be bitmathed, i might want to add a
+		 * flag to represent chattiness or something later. */
+
+		// in this mode she is free to do whatever the hell she wants whenever
+		// she wants. you can't hold a pony back.
+		public const int BE_FREE = 1;
+
+		// ask her to kind of keep to herself and stay in one place for some
+		// time.
+		public const int BE_STILL = 2;
+
 		///////////////////////////////////////////////////////////////////////
 		// instance properties ////////////////////////////////////////////////
 
@@ -43,6 +58,7 @@ namespace PonyApp {
 		private String Name;
 		private int Action;
 		private int Direction;
+		private int Mode;
 
 		// physical properties
 		private PonyWindow Window;
@@ -65,8 +81,9 @@ namespace PonyApp {
 
 		public Pony(String name) {
 			this.Name = name;
-			this.Action = 0;
+			this.Action = Pony.TROT;
 			this.Direction = 0;
+			this.Mode = Pony.BE_FREE;
 
 			this.ChoiceTimer = null;
 			this.WindowTimer = null;
@@ -110,7 +127,24 @@ namespace PonyApp {
 		 * do stuff that allows anypony to choose for herself what to do next */
 
 		public void ChooseWhatDo() {
-			int[] choice = this.ChooseByPersonality();
+			int[] choice;
+
+			// if we asked the pony to be still, restrict her options.
+			if((this.Mode & Pony.BE_STILL) == Pony.BE_STILL) {
+				choice = this.ChooseFromPassiveActions();
+			}
+
+			// let the pony do whatever she wants if we are allowing here to
+			// frolic free.
+			else if((this.Mode & Pony.BE_FREE) == Pony.BE_FREE) {
+				choice = this.ChooseByPersonality();
+			}
+
+			// else fallback to being free if unknown mode is unknown.
+			else {
+				choice = this.ChooseByPersonality();
+			}
+
 			this.TellWhatDo(choice[0],choice[1]);
 		}
 
@@ -141,6 +175,22 @@ namespace PonyApp {
 				this.ChoiceTimer.Tick += new EventHandler(this.ChooseWhatDo);
 				this.ResetChoiceTimer();
 			}
+		}
+
+		/* int-array ChoosePassiveAction(void);
+		 * have the pony choose something she can do that does not involve
+		 * running around everywhere. */
+
+		private int[] ChooseFromPassiveActions() {
+			int[] choice = new int[2];
+			int action = Pony.STAND;
+			int direction = this.RNG.Next(1,3);
+
+			// coming soon lol
+
+			choice[0] = action;
+			choice[1] = direction;
+			return choice;
 		}
 
 		/* int-array ChooseByPersonality(void);
@@ -203,7 +253,7 @@ namespace PonyApp {
 		 * stop any current actions, load the image that matches, and begin the
 		 * an action sequence. */
 
-		private void StartAction() {
+		public void StartAction() {
 
 			// stop any current action.
 			this.StopAction();
@@ -232,13 +282,30 @@ namespace PonyApp {
 		 * stop any timers and whatnot that may be screwing with the window or
 		 * image to prepare for whatever we want to do next. */
 
-		private void StopAction() {
+		public void StopAction() {
 			if(this.WindowTimer != null) {
 				this.WindowTimer.Stop();
 				this.WindowTimer = null;
 				// this is me assuming there is a garbage collector in this
 				// language and that it is doing its goddamn job :)
 			}
+		}
+
+		/* void PauseAction(void);
+		 */
+
+		public void PauseAction() {
+			Trace.WriteLine("<< pony is holding short for you");
+			this.TellWhatDo(Pony.STAND,this.Direction);
+			this.ChoiceTimer.Stop();
+		}
+
+		/* void ResumeAction(void);
+		 */
+
+		public void ResumeAction() {
+			Trace.WriteLine("<< pony left to her own devices");
+			this.ChoiceTimer.Start();
 		}
 
 		/*
