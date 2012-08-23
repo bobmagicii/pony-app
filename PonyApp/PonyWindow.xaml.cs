@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -47,7 +48,28 @@ namespace PonyApp {
 		}
 
 		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
+			// i think i can count on this always firing after the onclick's
+			// of menu items?
+
+			if(this.Pony.GetMode() != Pony.BE_STILL)
 			this.Pony.ResumeAction();
+		}
+
+		private void TellHoldToRight(object sender, RoutedEventArgs e) {
+			Trace.WriteLine("## telling pony to hold short to the right");
+			this.Pony.SetMode(Pony.BE_STILL);
+			this.Pony.TellWhatDo(Pony.TROT,Pony.RIGHT);
+		}
+
+		private void TellHoldToLeft(object sender, RoutedEventArgs e) {
+			Trace.WriteLine("## telling pony to hold short to the left");
+			this.Pony.SetMode(Pony.BE_STILL);
+			this.Pony.TellWhatDo(Pony.TROT, Pony.LEFT);
+		}
+
+		private void TellHasFreedom(object sender, RoutedEventArgs e) {
+			Trace.WriteLine("## telling pony she is free");
+			this.Pony.SetMode(Pony.BE_FREE);
 		}
 
 	}

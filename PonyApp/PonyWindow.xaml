@@ -7,8 +7,9 @@
 		<Image Name="Image" Width="200" Height="200"  Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center">
 			<Image.ContextMenu>
 				<ContextMenu Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
-					<MenuItem Header="Stand off to the Right" />
-					<MenuItem Header="Stand off to the Left" />
+					<MenuItem Header="Stand off to the Right" Click="TellHoldToRight" />
+					<MenuItem Header="Stand off to the Left" Click="TellHoldToLeft" />
+					<MenuItem Header="PONY BE FREE" Click="TellHasFreedom" />
 				</ContextMenu>
 			</Image.ContextMenu>
 		</Image>

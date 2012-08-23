@@ -92,6 +92,30 @@ namespace PonyApp {
 			this.RNG = new Random();
 		}
 
+		public int GetMode() {
+			return this.Mode;
+		}
+
+		public void SetMode(int mode) {
+			this.Mode = mode;
+		}
+
+		public int GetDirection() {
+			return this.Direction;
+		}
+
+		public void SetDirection(int dir) {
+			this.Direction = dir;
+		}
+
+		public int GetAction() {
+			return this.Action;
+		}
+
+		public void SetAction(int act) {
+			this.Action = act;
+		}
+
 		///////////////////////////////////////////////////////////////////////
 		// decision methods ///////////////////////////////////////////////////
 
@@ -185,6 +209,8 @@ namespace PonyApp {
 			int[] choice = new int[2];
 			int action = Pony.STAND;
 			int direction = this.RNG.Next(1,3);
+
+			Trace.WriteLine("// pony knows you would like her to be still");
 
 			// coming soon lol
 
@@ -295,17 +321,21 @@ namespace PonyApp {
 		 */
 
 		public void PauseAction() {
-			Trace.WriteLine("<< pony is holding short for you");
-			this.TellWhatDo(Pony.STAND,this.Direction);
-			this.ChoiceTimer.Stop();
+			if(this.ChoiceTimer.IsEnabled) {
+				Trace.WriteLine("<< pony is holding short for you");
+				this.TellWhatDo(Pony.STAND, this.Direction);
+				this.ChoiceTimer.Stop();
+			}
 		}
 
 		/* void ResumeAction(void);
 		 */
 
 		public void ResumeAction() {
-			Trace.WriteLine("<< pony left to her own devices");
-			this.ChoiceTimer.Start();
+			if(!this.ChoiceTimer.IsEnabled) {
+				Trace.WriteLine("<< pony left to her own devices");
+				this.ChoiceTimer.Start();
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -337,9 +367,15 @@ namespace PonyApp {
 			// if trotting to the right detect hitting the right edge.
 			if(this.Direction == Pony.RIGHT) {
 				if(((this.Window.Left + this.Window.Width) + 3) >= SystemParameters.VirtualScreenWidth) {
-					Trace.WriteLine("hit the right wall");
-					this.Direction = Pony.LEFT;
-					this.LoadImage();
+					Trace.WriteLine(">> pony hit the right wall");
+
+					if(this.Mode == Pony.BE_STILL) {
+						this.TellWhatDo(Pony.STAND, this.Direction);
+					} else {
+						this.Direction = Pony.LEFT;
+						this.LoadImage();
+					}
+
 				} else {
 					this.Window.Left += 3;
 				}
@@ -348,9 +384,15 @@ namespace PonyApp {
 			// if trotting to the left detect hitting the left edge.
 			if(this.Direction == Pony.LEFT) {
 				if(this.Window.Left - 3 <= 0) {
-					Trace.WriteLine("hit the left wall");
-					this.Direction = Pony.RIGHT;
-					this.LoadImage();
+					Trace.WriteLine(">> pony hit the left wall");
+
+					if(this.Mode == Pony.BE_STILL) {
+						this.TellWhatDo(Pony.STAND, this.Direction);
+					} else {
+						this.Direction = Pony.RIGHT;
+						this.LoadImage();
+					}
+
 				} else {
 					this.Window.Left -= 3;
 				}
