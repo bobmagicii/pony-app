@@ -20,10 +20,18 @@ just type "google whatever" she starts up chrome and does it.
 
  * She wanders across the taskbar as she wants to.
  * You can right click and tell her to stand off to the left or right
-   side of the screen. She'll trot over there and stay pretty off in
+   side of the screen. She'll trot over there and be pretty off in
    the corner.
  * If you pet her too much (double click) she becomes clingy...
 
+## TODO
+
+ * Find someone who can remake the same GIFs in high detail instead of
+   lol pixel art.
+ * Some ponies need more animations... Like Rarity has no sleep
+   animation even though Rainbow Dash and some others do. Its just a
+   pile of GIF files from that other project *shrug*
+ 
 ## Technical Blah Blah Blah
 
 This is a Visual C# Project. I don't know jack about what I am doing.
