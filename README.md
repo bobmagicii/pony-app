@@ -6,6 +6,7 @@ was too... busy... for what I wanted. I also didn't want ponies all
 over my bloody desktop. I just want the one to traverse across the
 taskbar.
 
+ * Web Page: http://catch404.net/projects/ponyapp/
  * Video: http://www.youtube.com/watch?v=fdITEc4gmpo&hd=1
  * Downloads: http://catch404.net/files/ponyapp/
  * Questions, Comments, Suggestions: Email bob at catch404 dot net
