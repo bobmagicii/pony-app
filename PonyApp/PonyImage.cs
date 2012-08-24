@@ -27,19 +27,19 @@ namespace PonyApp {
 		///////////////////////////////////////////////////////////////////////
 		// image selecting ////////////////////////////////////////////////////
 
-		public static Uri SelectImagePath(string name, int action, int direction) {
+		public static Uri SelectImagePath(string name, PonyAction action, PonyDirection direction) {
 			
 			string ImgDirection;
 			switch(direction) {
-				case Pony.RIGHT: ImgDirection = "Right"; break;
-				case Pony.LEFT:  ImgDirection = "Left"; break;
+				case PonyDirection.Right: ImgDirection = "Right"; break;
+                case PonyDirection.Left: ImgDirection = "Left"; break;
 				default:         ImgDirection = "Left"; break;
 			}
 
 			string ImgAction;
 			switch(action) {
-				case Pony.TROT:  ImgAction = "Trot"; break;
-				case Pony.STAND: ImgAction = "Stand"; break;
+				case PonyAction.Trot:  ImgAction = "Trot"; break;
+                case PonyAction.Stand: ImgAction = "Stand"; break;
 				default:         ImgAction = "Stand"; break;
 			}
 
@@ -52,7 +52,7 @@ namespace PonyApp {
 		///////////////////////////////////////////////////////////////////////
 		// instance work //////////////////////////////////////////////////////
 
-		public PonyImage(string name, int action, int direction) {
+		public PonyImage(string name, PonyAction action, PonyDirection direction) {
 			this.Load(PonyImage.SelectImagePath(name,action,direction));
 		}
 
