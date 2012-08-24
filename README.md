@@ -1,4 +1,3 @@
-
 ## WTF
 
 This is an app that makes a pony walk across my taskbar. I got these
@@ -7,7 +6,10 @@ was too... busy... for what I wanted. I also didn't want ponies all
 over my bloody desktop. I just want the one to traverse across the
 taskbar.
 
-http://www.youtube.com/watch?v=fdITEc4gmpo&hd=1
+ * Web Page: http://catch404.net/projects/ponyapp/
+ * Video: http://www.youtube.com/watch?v=fdITEc4gmpo&hd=1
+ * Downloads: http://catch404.net/files/ponyapp/
+ * Questions, Comments, Suggestions: Email bob at catch404 dot net
 
 Eventually I want to make her do work for me, like if I click her and
 just type "google whatever" she starts up chrome and does it.
@@ -26,6 +28,7 @@ just type "google whatever" she starts up chrome and does it.
 
 ## TODO
 
+ * Rename this app to something that is at least 20% cooler.
  * Find someone who can remake the same GIFs in high detail instead of
    lol pixel art.
  * Some ponies need more animations... Like Rarity has no sleep
