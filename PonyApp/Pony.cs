@@ -84,7 +84,7 @@ namespace PonyApp {
 
 		// physical properties
 		public PonyWindow Window;
-		private BitmapImage Image;
+		private PonyImage Image;
 		private Random RNG;
 
 		// this timer is for moving the window around. unfortunately if the pc
@@ -548,28 +548,17 @@ namespace PonyApp {
 		 * direction it is told to. */
 
 		private void LoadImage(int action,int direction) {
-			string uri = null;
 
-			switch(action) {
-				case Pony.TROT:
-					if(direction == Pony.RIGHT) uri = "pack://application:,,,/Resources/" + this.Name + "/TrotRight.gif";
-					if(direction == Pony.LEFT) uri = "pack://application:,,,/Resources/" + this.Name + "/TrotLeft.gif";
-					break;
+			// let any old images go to get garbage collected.
+			if(this.Image != null)
+				this.Image.Free();
 
-				case Pony.STAND:
-					if(direction == Pony.RIGHT) uri = "pack://application:,,,/Resources/" + this.Name + "/StandRight.gif";
-					if(direction == Pony.LEFT) uri = "pack://application:,,,/Resources/" + this.Name + "/StandLeft.gif";
-					break;
+			// open the new image.
+			this.Image = new PonyImage(this.Name,action,direction);
 
-			}
+			// and apply it to the pony window.
+			this.Image.ApplyToPonyWindow(this.Window);
 
-			// here i assume garbage collection is doing its job again.
-			this.Image = new BitmapImage(new Uri(uri));
-
-			// update the window.
-			this.Window.Width = this.Image.Width;
-			this.Window.Height = this.Image.Height;
-			ImageBehavior.SetAnimatedSource(this.Window.Image, this.Image);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////

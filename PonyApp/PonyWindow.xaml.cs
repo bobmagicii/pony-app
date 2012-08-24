@@ -40,6 +40,10 @@ namespace PonyApp {
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
 		}
 
+		private void OnWindowClosed(object sender, EventArgs e) {
+			Main.StopPony(this.Pony);
+		}
+
 		/* handle dragging the window since we cannot do that with the title bar
 		 * removed from the form. */
 		private void OnWindowDragAction(Object sender, MouseButtonEventArgs e) {
@@ -84,10 +88,6 @@ namespace PonyApp {
 		private void TellHasFreedom(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony she is free");
 			this.Pony.SetMode(Pony.BE_FREE);
-		}
-
-		private void OnPonyClosed(object sender, EventArgs e) {
-			Main.StopPony(this.Pony);
 		}
 
 		private void OnTopmostPony(object sender, RoutedEventArgs e) {
