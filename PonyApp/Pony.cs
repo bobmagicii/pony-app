@@ -22,21 +22,8 @@ namespace PonyApp
 
     public class Pony
     {
-
-        ///////////////////////////////////////////////////////////////////////
-        // constants //////////////////////////////////////////////////////////
-
-        /* action constants.
-         * these define the different actions a pony can take during its time
-         * on your desktop. */
-
-        public const int TROT = 1;
-        public const int STAND = 2;
-
         public static List<PonyAction> ValidActions { get; private set; }
-
         public static List<PonyAction> ValidActiveActions { get; private set; }
-
         public static List<PonyAction> ValidPassiveActions { get; private set; }
 
         /* direction constants.
@@ -44,24 +31,6 @@ namespace PonyApp
          * in maths to flip flop. flipflopper. */
 
         public static List<PonyDirection> ValidDirections { get; private set; }
-
-        /* pony modes.
-         * different modes for requesting she behaves decent when visiting
-         * your parents for the first time.
-         * 
-         * note: stagger these so they can be bitmathed, i might want to add a
-         * flag to represent chattiness or something later. */
-
-        // in this mode she is free to do whatever the hell she wants whenever
-        // she wants. you can't hold a pony back.
-        public const int BE_FREE = 1;
-
-        // ask her to kind of keep to herself and stay in one place for some
-        // time.
-        public const int BE_STILL = 2;
-
-        // she really loves you.
-        public const int BE_CLINGY = 3;
 
         ///////////////////////////////////////////////////////////////////////
         // instance properties ////////////////////////////////////////////////
