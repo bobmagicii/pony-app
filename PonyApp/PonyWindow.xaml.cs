@@ -33,6 +33,9 @@ namespace PonyApp {
 			// reference to the pony.
 			this.Pony = Pony;
 
+
+			this.Cursor = Cursors.Hand;
+
 			// enable moving the window by dragging anywhere.
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
 		}
@@ -49,11 +52,11 @@ namespace PonyApp {
 		}
 
 		private void OnMouseOver(object sender, MouseEventArgs e) {
-			this.Pony.PauseAction();
+			this.Pony.PauseChoiceEngine();
 		}
 
 		private void OnMouseOut(object sender, MouseEventArgs e) {
-			this.Pony.ResumeAction();
+			this.Pony.ResumeChoiceEngine();
 		}
 
 		private void OnContextMenuOpen(object sender, RoutedEventArgs e) {
@@ -66,14 +69,14 @@ namespace PonyApp {
 
 		private void TellHoldToRight(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony to hold short to the right");
-			this.Pony.PauseAction();
+			this.Pony.PauseChoiceEngine();
 			this.Pony.SetMode(Pony.BE_STILL);
 			this.Pony.TellWhatDo(Pony.TROT,Pony.RIGHT);
 		}
 
 		private void TellHoldToLeft(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony to hold short to the left");
-			this.Pony.PauseAction();
+			this.Pony.PauseChoiceEngine();
 			this.Pony.SetMode(Pony.BE_STILL);
 			this.Pony.TellWhatDo(Pony.TROT, Pony.LEFT);
 		}
@@ -81,6 +84,10 @@ namespace PonyApp {
 		private void TellHasFreedom(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony she is free");
 			this.Pony.SetMode(Pony.BE_FREE);
+		}
+
+		private void OnPonyClosed(object sender, EventArgs e) {
+			Main.StopPony(this.Pony);
 		}
 
 	}

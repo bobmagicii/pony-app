@@ -19,25 +19,38 @@ using WpfAnimatedGif;
 
 namespace PonyApp {
 
-	public partial class MainWindow:Window {
+	class Main {
 
-		private ArrayList PonyList;
+		// a list of all the ponies running around.
+		public static ArrayList PonyList = new ArrayList();
+
+		// start and track a new pony.
+		public static void StartPony(string name) {
+			Pony pone = new Pony(name);
+			Main.PonyList.Add(pone);
+		}
+
+		// stop and release an old pony.
+		public static void StopPony(Pony pone) {
+			Main.PonyList.Remove(pone);
+			pone.Window = null;
+			pone = null;
+
+			GC.Collect();
+
+			if(Main.PonyList.Count == 0) {
+				Application.Current.Shutdown();
+			}
+		}
+	}
+
+	public partial class MainWindow:Window {
 
 		public MainWindow() {
 			InitializeComponent();
 
 			// go pony go.
-			this.PonyList = new ArrayList();
-			this.StartPony("Rarity");
-		}
-
-		public void StartPony(string name) {
-			Pony pone;
-
-			pone = new Pony(name);
-			pone.TellWhatDo(Pony.TROT,Pony.RIGHT);
-
-			this.PonyList.Add(pone);
+			Main.StartPony("Rarity");
 		}
 
 	}

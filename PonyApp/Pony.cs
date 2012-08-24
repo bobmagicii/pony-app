@@ -31,11 +31,29 @@ namespace PonyApp {
 		public const int TROT = 1;
 		public const int STAND = 2;
 
+		public static int[] ValidActions = new int[] {
+			Pony.TROT,
+			Pony.STAND
+		};
+
+		public static int[] ValidActiveActions = new int[] {
+			Pony.TROT
+		};
+
+		public static int[] ValidPassiveActions = new int[] {
+			Pony.STAND
+		};
+
 		/* direction constants.
-		 * durr left and durr right. */
+		 * durr left and durr right. made them 1 and -1 so i could use them
+		 * in maths to flip flop. flipflopper. */
 
 		public const int RIGHT = 1;
-		public const int LEFT = 2;
+		public const int LEFT = -1;
+		public static int[] ValidDirections = new int[] {
+			Pony.LEFT,
+			Pony.RIGHT
+		};
 
 		/* pony modes.
 		 * different modes for requesting she behaves decent when visiting
@@ -60,12 +78,12 @@ namespace PonyApp {
 
 		// pony properties
 		private String Name;
-		private int Action;
-		private int Direction;
 		private int Mode;
+		private int Action = 0;
+		private int Direction = 0;
 
 		// physical properties
-		private PonyWindow Window;
+		public PonyWindow Window;
 		private BitmapImage Image;
 		private Random RNG;
 
@@ -89,8 +107,6 @@ namespace PonyApp {
 
 		public Pony(String name) {
 			this.Name = name;
-			this.Action = 0;
-			this.Direction = 0;
 			this.Mode = Pony.BE_FREE;
 
 			this.ChoiceTimer = null;
@@ -138,6 +154,10 @@ namespace PonyApp {
 		public void ResetChoiceTimer() {
 			// ponies in motion tend to stay in motion, while ponies at
 			// rest tend to stay at rest.
+
+			if(this.ChoiceTimer.IsEnabled)
+				this.ChoiceTimer.Stop();
+
 			if(this.IsActionActive()) {
 				Trace.WriteLine("// pony feels energetic.");
 				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(3, 6));
@@ -166,21 +186,36 @@ namespace PonyApp {
 
 			// if we asked the pony to be still, restrict her options.
 			if((this.Mode & Pony.BE_STILL) == Pony.BE_STILL) {
-				choice = this.ChooseFromPassiveActions();
+				choice = this.DecideFromPassiveActions();
 			}
 
 			// let the pony do whatever she wants if we are allowing here to
 			// frolic free.
 			else if((this.Mode & Pony.BE_FREE) == Pony.BE_FREE) {
-				choice = this.ChooseByPersonality();
+				choice = this.DecideByPersonality();
 			}
 
 			// else fallback to being free if unknown mode is unknown.
 			else {
-				choice = this.ChooseByPersonality();
+				choice = this.DecideByPersonality();
 			}
 
 			this.TellWhatDo(choice[0],choice[1]);
+		}
+
+		public void TellWhatDo(int action, int direction, bool devoted) {
+
+			if(devoted) {
+				// she is devoted to doing this and will stop making decisions
+				// for herself.
+				this.ChoiceTimer.Stop();
+			} else {
+				// after she does this she is free to make other choices on
+				// her own.
+				this.ResetChoiceTimer();
+			}
+
+			this.TellWhatDo(action,direction);
 		}
 
 		/* void TellWhatDo(int action, int direction);
@@ -210,40 +245,61 @@ namespace PonyApp {
 				this.ChoiceTimer.Tick += new EventHandler(this.ChooseWhatDo);
 				this.ResetChoiceTimer();
 			}
+
 		}
 
-		/* int-array ChoosePassiveAction(void);
+		/* int ChooseDirection(void);
+		 * choose from any of the valid random directions that have been defined
+		 * for the pony. */
+
+		private int ChooseDirection() {
+			return Pony.ValidDirections[this.RNG.Next(0,Pony.ValidDirections.Length)];
+		}
+
+		/* int ChooseAction(void);
+		 * choose from any of the valid actions that have been defined for the
+		 * pony. */
+
+		private int ChooseAction() {
+			return Pony.ValidActions[this.RNG.Next(0,Pony.ValidActions.Length)];
+		}
+
+		private int ChooseActiveAction() {
+			return Pony.ValidActiveActions[this.RNG.Next(0,Pony.ValidActiveActions.Length)];
+		}
+
+		private int ChoosePassiveAction() {
+			return Pony.ValidPassiveActions[this.RNG.Next(0,Pony.ValidPassiveActions.Length)];
+		}
+
+		/* int-array DecideFromPassiveActions(void);
 		 * have the pony choose something she can do that does not involve
 		 * running around everywhere. */
 
-		private int[] ChooseFromPassiveActions() {
+		private int[] DecideFromPassiveActions() {
 			int[] choice = new int[2];
-			int action = Pony.STAND;
-			int direction = this.RNG.Next(1,3);
 
 			Trace.WriteLine("// pony knows you would like her to be still");
 
-			// coming soon lol
-
-			choice[0] = action;
-			choice[1] = direction;
+			choice[0] = this.ChoosePassiveAction();
+			choice[1] = this.ChooseDirection();
 			return choice;
 		}
 
-		/* int-array ChooseByPersonality(void);
+		/* int-array DecideByPersonality(void);
 		 * allow the pony to choose for herself what her next actions will be.
 		 * eventually when multiple ponies are available through config files
 		 * this will handle the different personalites */
 
-		private int[] ChooseByPersonality() {
+		private int[] DecideByPersonality() {
 			bool undecided = false;
 			int action = 0;
 			int direction = 0;
 
 			do {
 
-				action = this.RNG.Next(1, 3);
-				direction = this.RNG.Next(1, 3);
+				action = this.ChooseAction();
+				direction = this.ChooseDirection();
 				undecided = false;
 
 				// pony generally like be lazy. if she is doing somethng lazy there is a
@@ -328,25 +384,25 @@ namespace PonyApp {
 			}
 		}
 
-		/* void PauseAction(void);
+		/* void PauseChoiceEngine(void);
 		 */
 
-		public void PauseAction() {
+		public void PauseChoiceEngine() {
 			if(this.ChoiceTimer.IsEnabled) {
-				Trace.WriteLine("<< pony is holding short for you");
-				this.TellWhatDo(Pony.STAND, this.Direction);
-				this.ChoiceTimer.Stop();
+				Trace.WriteLine("<< pony holds off on making any more choices for now");
+				this.TellWhatDo(Pony.STAND, this.Direction, true);
 			}
 		}
 
-		/* void ResumeAction(void);
+		/* void ResumeChoiceEngine(void);
 		 */
 
-		public void ResumeAction() {
+		public void ResumeChoiceEngine() {
 
 			// if the pony is doing something active while told to be still
 			// she might still be performing an action to prepare. we don not
-			// want to distract her. (e.g. mousing out while holding short)
+			// want to distract her. (stopping things like mousein mouseout
+			// from restarting the choice engine while on a mission)
 			if(this.IsActionActive() && this.Mode == Pony.BE_STILL)
 				return;
 
@@ -355,6 +411,7 @@ namespace PonyApp {
 			if(this.Mode == Pony.BE_CLINGY)
 				return;
 
+			// else it is ok to restart the choice timer.
 			if(!this.ChoiceTimer.IsEnabled) {
 				Trace.WriteLine("<< pony left to her own devices");
 				this.ChoiceTimer.Start();
@@ -378,7 +435,7 @@ namespace PonyApp {
 
 		private void ClingStart() {
 			this.StopAction();
-			this.PauseAction();
+			this.PauseChoiceEngine();
 
 			this.Mode = Pony.BE_CLINGY;
 			this.ClingTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle,this.Window.Dispatcher);
@@ -393,7 +450,7 @@ namespace PonyApp {
 			this.ClingTimer.Stop();
 			this.ClingTimer = null;
 
-			this.ResumeAction();
+			this.ResumeChoiceEngine();
 		}
 
 		private void ClingTick(Object sender, EventArgs e) {
@@ -431,6 +488,7 @@ namespace PonyApp {
 		 */
 
 		private void Trot() {
+			// inialize the timer which will run the trot animation of the window movement.
 			this.WindowTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
 			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(20);
 			this.WindowTimer.Tick += new EventHandler(this.TrotTick);
@@ -438,40 +496,37 @@ namespace PonyApp {
 		}
 
 		private void TrotTick(Object sender, EventArgs e) {
+			int direction = this.Direction;
 
-			// if trotting to the right detect hitting the right edge.
+			// figure out if she has wallfaced and needs to change directions.
 			if(this.Direction == Pony.RIGHT) {
 				if(((this.Window.Left + this.Window.Width) + 3) >= SystemParameters.VirtualScreenWidth) {
 					Trace.WriteLine(">> pony hit the right wall");
-
-					if(this.Mode == Pony.BE_STILL) {
-						this.TellWhatDo(Pony.STAND, this.Direction);
-						this.ResumeAction();
-					} else {
-						this.Direction = Pony.LEFT;
-						this.LoadImage();
-					}
-
-				} else {
-					this.Window.Left += 3;
+					direction = Pony.LEFT;
+				}
+			}
+			
+			else if(this.Direction == Pony.LEFT) {
+				if((this.Window.Left - 3) <= 0) {
+					Trace.WriteLine(">> pony hit the left wall");
+					direction = Pony.RIGHT;
 				}
 			}
 
-			// if trotting to the left detect hitting the left edge.
-			if(this.Direction == Pony.LEFT) {
-				if(this.Window.Left - 3 <= 0) {
-					Trace.WriteLine(">> pony hit the left wall");
+			// update the window position.
+			this.Window.Left += (3 * direction);
 
-					if(this.Mode == Pony.BE_STILL) {
-						this.TellWhatDo(Pony.STAND, this.Direction);
-						this.ResumeAction();
-					} else {
-						this.Direction = Pony.RIGHT;
-						this.LoadImage();
-					}
-
-				} else {
-					this.Window.Left -= 3;
+			if(direction != this.Direction) {
+				// if she was trotting even though she had been told to stand
+				// still, now that she has hit the wall just stand there and
+				// look pretty.
+				if(this.Mode == Pony.BE_STILL) {
+					this.TellWhatDo(Pony.STAND, this.Direction, false);
+				}
+				
+				// else abotu face and keep going like a boss.
+				else {
+					this.TellWhatDo(Pony.TROT, direction);
 				}
 			}
 
