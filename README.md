@@ -8,6 +8,7 @@ taskbar.
 
  * Video: http://www.youtube.com/watch?v=fdITEc4gmpo&hd=1
  * Downloads: http://catch404.net/files/ponyapp/
+ * Questions, Comments, Suggestions: Email bob at catch404 dot net
 
 Eventually I want to make her do work for me, like if I click her and
 just type "google whatever" she starts up chrome and does it.
