@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("PonyApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("OrangeHat")]
 [assembly: AssemblyProduct("PonyApp")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2012")]
+[assembly: AssemblyCopyright("Copyright © Bob Majdak Jr 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

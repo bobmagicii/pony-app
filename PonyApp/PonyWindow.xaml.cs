@@ -90,6 +90,15 @@ namespace PonyApp {
 			Main.StopPony(this.Pony);
 		}
 
+		private void OnTopmostPony(object sender, RoutedEventArgs e) {
+			this.Pony.Window.Topmost = !this.Pony.Window.Topmost;
+			((MenuItem)sender).IsChecked = this.Pony.Window.Topmost;
+		}
+
+		private void OnClosePony(object sender, RoutedEventArgs e) {
+			this.Pony.Window.Close();
+		}
+
 	}
 
 }
