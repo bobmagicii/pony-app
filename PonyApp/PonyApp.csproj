@@ -66,8 +66,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WpfAnimatedGif">
-      <HintPath>..\..\..\..\..\Developer\WpfAnimatedGif-1.0\WpfAnimatedGif.dll</HintPath>
+    <Reference Include="WpfAnimatedGif, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +75,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PonyMode.cs" />
+    <Compile Include="PonyDirection.cs" />
+    <Compile Include="PonyAction.cs" />
     <Compile Include="PonyImage.cs" />
+    <Compile Include="PonyState.cs" />
     <Compile Include="PonyWindow.xaml.cs">
       <DependentUpon>PonyWindow.xaml</DependentUpon>
     </Compile>
@@ -126,6 +130,7 @@
     <Content Include="Resources\Rarity\TrotRight.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="WpfAnimatedGif.dll" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Rarity\TrotLeft.gif">
@@ -163,18 +168,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Twilight Sparkle\StandLeft.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Twilight Sparkle\StandRight.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Twilight Sparkle\TrotLeft.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Twilight Sparkle\TrotRight.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="Resources\Twilight Sparkle\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
