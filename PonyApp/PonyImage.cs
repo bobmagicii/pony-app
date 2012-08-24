@@ -27,7 +27,7 @@ namespace PonyApp {
 		///////////////////////////////////////////////////////////////////////
 		// image selecting ////////////////////////////////////////////////////
 
-		public static string SelectImagePath(string name, int action, int direction) {
+		public static Uri SelectImagePath(string name, int action, int direction) {
 			
 			string ImgDirection;
 			switch(direction) {
@@ -43,11 +43,10 @@ namespace PonyApp {
 				default:         ImgAction = "Stand"; break;
 			}
 
-			// for testing purposes only, this difference here:
-			if(name == "Rarity")
-				return "pack://application:,,,/Resources/" + name + "/" + ImgAction + ImgDirection + ".gif";
-			else
-				return "Resources/" + name + "/" + ImgAction + ImgDirection + ".gif";
+			return new Uri(
+				(AppDomain.CurrentDomain.BaseDirectory + "Resources/" + name + "/" + ImgAction + ImgDirection + ".gif"),
+				UriKind.Absolute
+			);
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -57,13 +56,18 @@ namespace PonyApp {
 			this.Load(PonyImage.SelectImagePath(name,action,direction));
 		}
 
+		public void Load(Uri uri) {
+			this.uri = uri;
+			this.Load();
+		}
+
 		public void Load(string path) {
 			this.uri = new Uri(path);
-			Trace.WriteLine("$$ uri: " + uri.ToString());
 			this.Load();
 		}
 
 		public void Load() {
+			Trace.WriteLine("$$ uri: " + uri.ToString());
 			this.img = new BitmapImage(this.uri);
 		}
 
