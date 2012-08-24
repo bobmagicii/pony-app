@@ -28,6 +28,7 @@ just type "google whatever" she starts up chrome and does it.
 
 ## TODO
 
+ * Rename this app to something that is at least 20% cooler.
  * Find someone who can remake the same GIFs in high detail instead of
    lol pixel art.
  * Some ponies need more animations... Like Rarity has no sleep
