@@ -106,8 +106,32 @@ namespace PonyApp {
 			this.Window = new PonyWindow(this);
 			this.RNG = new Random();
 
+			Trace.WriteLine(String.Format("// {0} says hello",this.Name));
+
 			// go ahead and do something now.
 			this.ChooseWhatDo();
+		}
+
+		~Pony() {
+			Trace.WriteLine(String.Format("== {0} object destructed",this.Name));
+		}
+
+		public void Shutdown() {
+			if(this.WindowTimer != null) this.WindowTimer.Stop();
+			if(this.ChoiceTimer != null) this.ChoiceTimer.Stop();
+			if(this.ClingTimer != null) this.ClingTimer.Stop();
+
+			this.WindowTimer = this.ChoiceTimer = this.ClingTimer = null;
+
+			this.Image.Free();
+			this.Image = null;
+
+			this.Window.Pony = null;
+			this.Window = null;
+
+			this.AvailableActions = this.AvailableActiveActions = this.AvailablePassiveActions = null;
+
+			Trace.WriteLine(String.Format("// {0} waves goodbye",this.Name));
 		}
 
 		///////////////////////////////////////////////////////////////////////
