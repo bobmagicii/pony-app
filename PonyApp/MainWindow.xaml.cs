@@ -21,16 +21,44 @@ namespace PonyApp {
 
 	class Main {
 
-		// a list of all the ponies running around.
-		public static ArrayList PonyList = new ArrayList();
+		/// <summary>
+		/// a list of all ponies that are currently running around on the
+		/// desktop. well, maybe not literally running. they could just be
+		/// standing there too.
+		/// </summary>
+		public static List<Pony> PonyList = new List<Pony>();
 
-		// start and track a new pony.
+		/// <summary>
+		/// attempt to start the requested pony, checking that it is one from
+		/// the configuration system.
+		/// </summary>
 		public static void StartPony(string name) {
-			Pony pone = new Pony(name);
-			Main.PonyList.Add(pone);
+			PonyConfig pconfig;
+
+			// the pony you seek, i may have heard of her long ago...
+			pconfig = PonyConfig.List.Find(delegate(PonyConfig config){
+				return config.Name == name;
+			});
+
+			if(pconfig == null) {
+				// ... but it was only in legend.
+				Trace.WriteLine(String.Format(
+					"== unable to start {0}",
+					name
+				));
+
+				return;
+			} else {
+				// ... yeah she lives next door.
+				Pony pone = new Pony(pconfig);
+				Main.PonyList.Add(pone);
+			}
+
 		}
 
-		// stop and release an old pony.
+		/// <summary>
+		/// stop a currently running pony.
+		/// </summary>
 		public static void StopPony(Pony pone) {
 			Main.PonyList.Remove(pone);
 			pone.Window = null;

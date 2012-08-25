@@ -20,9 +20,6 @@ using WpfAnimatedGif;
 namespace PonyApp {
 
 	public class Pony {
-		public static List<PonyAction> ValidActions { get; private set; }
-		public static List<PonyAction> ValidActiveActions { get; private set; }
-		public static List<PonyAction> ValidPassiveActions { get; private set; }
 
 		/* direction constants.
 		 * durr left and durr right. made them 1 and -1 so i could use them
@@ -34,7 +31,12 @@ namespace PonyApp {
 		// instance properties ////////////////////////////////////////////////
 
 		// pony properties
-		private String Name;
+		private String Name { get; set; }
+		private int YOffset { get; set; }
+		private List<PonyAction> AvailableActions { get; set; }
+		private List<PonyAction> AvailableActiveActions { get; set; }
+		private List<PonyAction> AvailablePassiveActions { get; set; }
+
 		public PonyMode Mode { get; set; }
 		public PonyAction Action { get; set; }
 		public PonyDirection Direction { get; set; }
@@ -59,28 +61,42 @@ namespace PonyApp {
 		// you are.
 		private DispatcherTimer ClingTimer;
 
-		/* constructor Pony(string name);
-		 * constructs. give it a pony name. */
+		/// <summary>
+		/// create a new pony from the configuration.
+		/// </summary>
+		public Pony(PonyConfig config) {
+			this.Name = config.Name;
+			this.YOffset = config.YOffset;
 
-		public Pony(String name) {
-			Name = name;
-			Mode = PonyMode.Free;
+			// prepare available action lists. 
+			this.AvailableActions = config.Actions;
+			this.AvailableActiveActions = new List<PonyAction>();
+			this.AvailablePassiveActions = new List<PonyAction>();
 
-			ChoiceTimer = null;
-			WindowTimer = null;
-			ClingTimer = null;
+			this.AvailableActions.ForEach(delegate(PonyAction action){
+				if(Enum.IsDefined(typeof(PonyActionActive), (int)action))
+					this.AvailableActiveActions.Add(action);
+
+				if(Enum.IsDefined(typeof(PonyActionPassive), (int)action))
+					this.AvailablePassiveActions.Add(action);
+			});
+
+			Trace.WriteLine(String.Format(
+				"== {0} can perform {1} Active and {2} Passive actions",
+				this.Name,
+				this.AvailableActiveActions.Count,
+				this.AvailablePassiveActions.Count
+			));
+
+			this.Mode = PonyMode.Free;
+			this.ChoiceTimer = null;
+			this.WindowTimer = null;
+			this.ClingTimer = null;
 
 			Window = new PonyWindow(this);
 			RNG = new Random();
 
 			ChooseWhatDo();
-		}
-
-		static Pony() {
-			ValidActions = new List<PonyAction>() { PonyAction.Trot, PonyAction.Stand };
-			ValidActiveActions = new List<PonyAction>() { PonyAction.Trot };
-			ValidPassiveActions = new List<PonyAction>() { PonyAction.Stand };
-			ValidDirections = new List<PonyDirection>() { PonyDirection.Left, PonyDirection.Right };
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -165,11 +181,24 @@ namespace PonyApp {
 
 		public void TellWhatDo(PonyAction action, PonyDirection direction) {
 
-			Trace.WriteLine(
-				">> Action: " + this.Action.ToString() + ", " +
-				"Direction: " + this.Direction.ToString()
-			);
+			// can she do it? that is an important question to ask.
+			if(!this.CanDo(action)) {
+				Trace.WriteLine(String.Format(
+					"!! pony {0} cannot {1}",
+					this.Name,
+					action.ToString()
+				));
 
+				return;
+			}
+
+			Trace.WriteLine(String.Format(
+				">> pony {0} will {1} to the {2}",
+				this.Name,
+				action.ToString(),
+				direction.ToString()
+			));
+		
 			// no need to muck with the image and window if we are doing more of the
 			// same yeh?
 			if(action != this.Action || direction != this.Direction) {
@@ -188,12 +217,20 @@ namespace PonyApp {
 
 		}
 
+		public bool CanDo(PonyAction action) {
+			return this.AvailableActions.Contains(action);
+		}
+
 		/* int ChooseDirection(void);
 		 * choose from any of the valid random directions that have been defined
 		 * for the pony. */
 
 		private PonyDirection ChooseDirection() {
-			return ValidDirections[this.RNG.Next(0, Pony.ValidDirections.Count)];
+			switch(this.RNG.Next(1,3)) {
+				case 1: return PonyDirection.Left;
+				case 2: return PonyDirection.Right;
+				default: return PonyDirection.None;
+			}
 		}
 
 		/* int ChooseAction(void);
@@ -201,15 +238,15 @@ namespace PonyApp {
 		 * pony. */
 
 		private PonyAction ChooseAction() {
-			return ValidActions[this.RNG.Next(0, Pony.ValidActions.Count)];
+			return this.AvailableActions[this.RNG.Next(0,this.AvailableActions.Count)];
 		}
 
 		private PonyAction ChooseActiveAction() {
-			return ValidActiveActions[this.RNG.Next(0, Pony.ValidActiveActions.Count)];
+			return this.AvailableActiveActions[this.RNG.Next(0, this.AvailableActiveActions.Count)];
 		}
 
 		private PonyAction ChoosePassiveAction() {
-			return ValidPassiveActions[this.RNG.Next(0, Pony.ValidPassiveActions.Count)];
+			return this.AvailablePassiveActions[this.RNG.Next(0, this.AvailablePassiveActions.Count)];
 		}
 
 		/* int-array DecideFromPassiveActions(void);
@@ -372,6 +409,8 @@ namespace PonyApp {
 		}
 
 		private void ClingStart() {
+			Trace.WriteLine(String.Format("// pony {0} get an obsessive look in her eye...", this.Name));
+
 			this.StopAction();
 			this.PauseChoiceEngine();
 
@@ -383,8 +422,9 @@ namespace PonyApp {
 		}
 
 		private void ClingStop() {
-			this.Mode = PonyMode.Free;
+			Trace.WriteLine(String.Format("// pony {0} decides to fend for herself...",this.Name));
 
+			this.Mode = PonyMode.Free;
 			this.ClingTimer.Stop();
 			this.ClingTimer = null;
 
@@ -407,8 +447,6 @@ namespace PonyApp {
 				this.TellWhatDo(PonyAction.Stand, PonyDirection.Left);
 			}
 
-
-			Trace.WriteLine("mouse distance: " + dist);
 		}
 
 		/*

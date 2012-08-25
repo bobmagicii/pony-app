@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace PonyApp {
 
-	class PonyConfig {
+	public class PonyConfig {
 
 		/// <summary>
 		/// both the name of the pony and the directory in which it resides.
@@ -28,6 +28,9 @@ namespace PonyApp {
 		/// whatnot so they might have more space below them than others do.
 		/// </summary>
 		public int YOffset { get; set; }
+
+		/////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
 
 		/// <summary>
 		/// a static list of all the ponies found and good to go.
