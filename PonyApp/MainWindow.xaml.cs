@@ -49,6 +49,13 @@ namespace PonyApp {
 		public MainWindow() {
 			InitializeComponent();
 
+			// find anypony that is available.
+			PonyConfig.FindEverypony();
+			Trace.WriteLine(String.Format(
+				"== Found {0} usable ponies",
+				PonyConfig.List.Count
+			));
+
 			// go pony go.
 			Main.StartPony("Rarity");
 		}
