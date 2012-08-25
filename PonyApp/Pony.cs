@@ -77,12 +77,13 @@ namespace PonyApp {
 
 			// for each available action, classify them as active or passive
 			// for our decision making later.
-			this.AvailableActions.ForEach(delegate(PonyAction action){
-				if(Enum.IsDefined(typeof(PonyActionActive), (int)action))
-					this.AvailableActiveActions.Add(action);
+            this.AvailableActions.ForEach(x =>
+            {
+                if (x.IsActive())
+                    AvailableActiveActions.Add(x);
 
-				if(Enum.IsDefined(typeof(PonyActionPassive), (int)action))
-					this.AvailablePassiveActions.Add(action);
+                if (x.IsPassive())
+                    AvailablePassiveActions.Add(x);
 			});
 
 			Trace.WriteLine(String.Format(
@@ -724,8 +725,7 @@ namespace PonyApp {
 		/// <param name="action"></param>
 		/// <returns></returns>
 		public static bool IsActionActive(PonyAction action) {
-			if(Enum.IsDefined(typeof(PonyActionActive), (int)action)) return true;
-			else return false;
+            return action.IsActive();
 		}
 
 	}
