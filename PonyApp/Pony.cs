@@ -129,7 +129,14 @@ namespace PonyApp {
 
 			if(this.IsActionActive()) {
 				Trace.WriteLine(String.Format("// {0} feels energized",this.Name));
-				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(3, 7));
+
+				// personal quirks should be given a little longer to run than generic
+				// actions.
+				if(this.Action == PonyAction.Action1)
+					this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(6, 10));
+				else
+					this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(4, 8));
+
 			} else {
 				Trace.WriteLine(String.Format("// {0} feels lazy", this.Name));
 				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(12, 20));
@@ -345,7 +352,7 @@ namespace PonyApp {
 				// be undecided. this should make the quirky actions more special when
 				// they do actually happen.
 				if(choice.Action == PonyAction.Action1) {
-					if(this.RNG.Next(1, 101) <= 75) {
+					if(this.RNG.Next(1, 101) <= 80) {
 						Trace.WriteLine(String.Format("// {0} feels bashful about her quirkiness.",this.Name));
 						undecided = true;
 						continue;
