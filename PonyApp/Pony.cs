@@ -371,7 +371,7 @@ namespace PonyApp {
 					// is a higher chance she will not change directions.
 					if(this.IsActionActive() && Pony.IsActionActive(choice.Action)) {
 						if(this.RNG.Next(1, 101) <= 70) {
-							Trace.WriteLine(String.Format(">> {0}'s momentum carries her through"));
+							Trace.WriteLine(String.Format(">> {0}'s momentum carries her through",this.Name));
 							choice.Direction = this.Direction;
 						}
 					}
