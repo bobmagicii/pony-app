@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,7 +60,13 @@ namespace PonyApp {
 
 		public void Load() {
 			// Trace.WriteLine("$$ uri: " + uri.ToString());
-			this.img = new BitmapImage(this.uri);
+
+			if(!File.Exists(this.uri.LocalPath)) {
+				this.img = null;
+			} else {
+				this.img = new BitmapImage(this.uri);
+			}
+			
 		}
 
 		public void Free() {
@@ -68,6 +75,8 @@ namespace PonyApp {
 		}
 
 		public void ApplyToPonyWindow(PonyWindow win) {
+			if(this.img == null) return;
+
 			// resize the window to fit this image.
 			win.Width = this.img.Width;
 			win.Height = this.img.Height;
