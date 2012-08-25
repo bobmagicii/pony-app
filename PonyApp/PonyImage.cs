@@ -73,7 +73,11 @@ namespace PonyApp {
 					"[IMG] {0}",
 					this.uri.LocalPath
 				));
-				this.img = new BitmapImage(this.uri);
+				this.img = new BitmapImage();
+				this.img.BeginInit();
+				this.img.UriSource = this.uri;
+				this.img.CacheOption = BitmapCacheOption.OnLoad;
+				this.img.EndInit();
 			}
 			
 		}
