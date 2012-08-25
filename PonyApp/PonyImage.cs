@@ -25,6 +25,9 @@ namespace PonyApp {
 		public Uri uri;
 		public BitmapImage img;
 
+		public PonyAction Action;
+		public PonyDirection Direction;
+
 		///////////////////////////////////////////////////////////////////////
 		// image selecting ////////////////////////////////////////////////////
 
@@ -45,6 +48,8 @@ namespace PonyApp {
 		// instance work //////////////////////////////////////////////////////
 
 		public PonyImage(string name, PonyAction action, PonyDirection direction) {
+			this.Action = action;
+			this.Direction = direction;
 			this.Load(PonyImage.SelectImagePath(name,action,direction));
 		}
 
@@ -64,6 +69,10 @@ namespace PonyApp {
 			if(!File.Exists(this.uri.LocalPath)) {
 				this.img = null;
 			} else {
+				Trace.WriteLine(String.Format(
+					"[IMG] {0}",
+					this.uri.LocalPath
+				));
 				this.img = new BitmapImage(this.uri);
 			}
 			

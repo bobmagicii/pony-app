@@ -43,7 +43,7 @@ namespace PonyApp {
 
 		// physical properties
 		public PonyWindow Window;
-		private PonyImage Image;
+		private List<PonyImage> Image;
 		private Random RNG;
 
 		// this timer is for moving the window around. unfortunately if the pc
@@ -105,6 +105,10 @@ namespace PonyApp {
 			// various utilities
 			this.Window = new PonyWindow(this);
 			this.RNG = new Random();
+			this.Image = new List<PonyImage>();
+
+			// preload action images.
+			this.LoadAllImages();
 
 			Trace.WriteLine(String.Format("// {0} says hello",this.Name));
 
@@ -123,8 +127,11 @@ namespace PonyApp {
 
 			this.WindowTimer = this.ChoiceTimer = this.ClingTimer = null;
 
-			this.Image.Free();
-			this.Image = null;
+			this.Image.ForEach(delegate(PonyImage img){
+				img.Free();
+				img = null;
+			});
+			this.Image.Clear();
 
 			this.Window.Pony = null;
 			this.Window = null;
@@ -653,6 +660,17 @@ namespace PonyApp {
 		// image management methods ///////////////////////////////////////////
 
 		/// <summary>
+		/// bring all the gifs for this pony into ram so the disk doesn't
+		/// get warm like it did last night when i left the mane six runnning.
+		/// </summary>
+		private void LoadAllImages() {
+			this.AvailableActions.ForEach(delegate(PonyAction action){
+				this.Image.Add(new PonyImage(this.Name, action, PonyDirection.Left));
+				this.Image.Add(new PonyImage(this.Name, action, PonyDirection.Right));
+			});
+		}
+
+		/// <summary>
 		/// load the graphic for the action she is currently doing.
 		/// </summary>
 		private void LoadImage() {
@@ -660,21 +678,32 @@ namespace PonyApp {
 		}
 
 		/// <summary>
-		/// load the graphic for a specific action.
+		/// find and apply a specified image from the pony's cache of them.
 		/// </summary>
 		/// <param name="action"></param>
 		/// <param name="direction"></param>
 		private void LoadImage(PonyAction action, PonyDirection direction) {
+			PonyImage image;
 
-			// let any old images go to get garbage collected.
-			if(this.Image != null)
-				this.Image.Free();
+			// find the requested image from the cache.
+			image = this.Image.Find(delegate(PonyImage img){
+				if(img.Action == action && img.Direction == direction) return true;
+				else return false;
+			});
 
-			// open the new image.
-			this.Image = new PonyImage(this.Name, action, direction);
+			if(image == null) {
+				Trace.WriteLine(String.Format(
+					"!! no image for {0} {1} {2}",
+					this.Name,
+					action.ToString(),
+					direction.ToString()
+				));
+
+				return;
+			};
 
 			// and apply it to the pony window.
-			this.Image.ApplyToPonyWindow(this.Window);
+			image.ApplyToPonyWindow(this.Window);
 
 		}
 
