@@ -133,6 +133,12 @@
     <AppDesigner Include="Properties\" />
     <Content Include="DLLs\Newtonsoft.Json.dll" />
     <Content Include="DLLs\WpfAnimatedGif.dll" />
+    <Content Include="Resources\Rarity\Action1Left.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Rarity\Action1Right.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Rarity\this.pony">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -150,10 +156,10 @@
     <Content Include="Resources\Twilight Sparkle\StandRight.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Twilight Sparkle\TrotLeft.gif">
+    <Content Include="Resources\Twilight Sparkle\TrotRight.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Twilight Sparkle\TrotRight.gif">
+    <Content Include="Resources\Twilight Sparkle\TrotLeft.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

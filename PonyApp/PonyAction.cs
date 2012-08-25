@@ -7,19 +7,22 @@ namespace PonyApp
 {
     public enum PonyAction
     {
-        None = 0,
-        Trot = 1,
-        Stand = 2
+        None    = 0, // an unknown for testing against.
+        Trot    = 1, // casual jogging 
+        Stand   = 2, // stay in one place, mostly idle, looking pretty.
+		Action1 = 3  // active personality action, something unique that pony does.
     }
 
 	public enum PonyActionActive
 	{
 		None = 0,
-		Trot = PonyAction.Trot
+		Trot = PonyAction.Trot,
+		Action1 = PonyAction.Action1
+
 	}
 
 	public enum PonyActionPassive {
 		None = 0,
-		Trot = PonyAction.Stand
+		Stand = PonyAction.Stand
 	}
 }

@@ -28,23 +28,14 @@ namespace PonyApp {
 		// image selecting ////////////////////////////////////////////////////
 
 		public static Uri SelectImagePath(string name, PonyAction action, PonyDirection direction) {
-			
-			string ImgDirection;
-			switch(direction) {
-				case PonyDirection.Right: ImgDirection = "Right"; break;
-                case PonyDirection.Left: ImgDirection = "Left"; break;
-				default:         ImgDirection = "Left"; break;
-			}
-
-			string ImgAction;
-			switch(action) {
-				case PonyAction.Trot:  ImgAction = "Trot"; break;
-                case PonyAction.Stand: ImgAction = "Stand"; break;
-				default:         ImgAction = "Stand"; break;
-			}
-
 			return new Uri(
-				(AppDomain.CurrentDomain.BaseDirectory + "Resources/" + name + "/" + ImgAction + ImgDirection + ".gif"),
+				String.Format(
+					"{0}Resources\\{1}\\{2}{3}.gif",
+					AppDomain.CurrentDomain.BaseDirectory,
+					name,
+					action.ToString(),
+					direction.ToString()
+				),
 				UriKind.Absolute
 			);
 		}
@@ -67,7 +58,7 @@ namespace PonyApp {
 		}
 
 		public void Load() {
-			Trace.WriteLine("$$ uri: " + uri.ToString());
+			// Trace.WriteLine("$$ uri: " + uri.ToString());
 			this.img = new BitmapImage(this.uri);
 		}
 

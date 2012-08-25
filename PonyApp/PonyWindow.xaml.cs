@@ -63,12 +63,20 @@ namespace PonyApp
 
         private void OnMouseOver(object sender, MouseEventArgs e)
         {
-            this.Pony.PauseChoiceEngine();
+            this.Pony.TellWhatDo(
+				PonyAction.Stand,
+				this.Pony.Direction,
+				true
+			);
         }
 
         private void OnMouseOut(object sender, MouseEventArgs e)
         {
-            this.Pony.ResumeChoiceEngine();
+			this.Pony.TellWhatDo(
+				PonyAction.Stand,
+				this.Pony.Direction,
+				false
+			);
         }
 
         private void OnContextMenuOpen(object sender, RoutedEventArgs e)

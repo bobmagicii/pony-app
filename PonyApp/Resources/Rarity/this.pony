@@ -1,5 +1,5 @@
 ﻿{
 	"Name":"Rarity",
-	"Actions":["Stand","Trot"],
+	"Actions":["Stand","Trot","Action1"],
 	"YOffset": 10
 }
