@@ -17,6 +17,8 @@
 					<MenuItem Header="Stay on top" Click="OnTopmostPony" IsCheckable="True" IsChecked="True" />
 					<Separator />
 					<MenuItem Header="Close this pony" Click="OnClosePony" />
+					<Separator />
+					<MenuItem Header="Close all pony" Click="OnCloseAllPony" />
 				</ContextMenu>
 			</Image.ContextMenu>
 		</Image>

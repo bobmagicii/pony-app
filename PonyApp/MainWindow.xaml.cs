@@ -60,8 +60,10 @@ namespace PonyApp {
 		/// stop a currently running pony.
 		/// </summary>
 		public static void StopPony(Pony pone) {
-			pone.Shutdown();
 			Main.PonyList.Remove(pone);
+			pone.Shutdown();
+			pone = null;
+			
 
 			if(Main.PonyList.Count == 0) {
 				Application.Current.Shutdown();

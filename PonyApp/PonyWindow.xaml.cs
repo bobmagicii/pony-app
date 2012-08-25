@@ -76,6 +76,8 @@ namespace PonyApp {
 		}
 
 		private void OnMouseOver(object sender, MouseEventArgs e) {
+			if(this.Pony.Mode == PonyMode.Still) return;
+
 			this.Pony.TellWhatDo(
 				PonyAction.Stand,
 				this.Pony.Direction,
@@ -84,6 +86,8 @@ namespace PonyApp {
 		}
 
 		private void OnMouseOut(object sender, MouseEventArgs e) {
+			if(this.Pony.Mode == PonyMode.Still) return;
+
 			this.Pony.TellWhatDo(
 				PonyAction.Stand,
 				this.Pony.Direction,
@@ -101,16 +105,14 @@ namespace PonyApp {
 
 		private void TellHoldToRight(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony to hold short to the right");
-			this.Pony.PauseChoiceEngine();
 			this.Pony.Mode = PonyMode.Still;
-			this.Pony.TellWhatDo(PonyAction.Trot, PonyDirection.Right);
+			this.Pony.TellWhatDo(PonyAction.Trot, PonyDirection.Right,true);
 		}
 
 		private void TellHoldToLeft(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## telling pony to hold short to the left");
-			this.Pony.PauseChoiceEngine();
 			this.Pony.Mode = PonyMode.Still;
-			this.Pony.TellWhatDo(PonyAction.Trot, PonyDirection.Left);
+			this.Pony.TellWhatDo(PonyAction.Trot, PonyDirection.Left,true);
 		}
 
 		private void TellHasFreedom(object sender, RoutedEventArgs e) {
@@ -129,6 +131,17 @@ namespace PonyApp {
 
 		private void OnClosePony() {
 			this.Pony.Window.Close();
+		}
+
+		private void OnCloseAllPony(object sender, RoutedEventArgs e) {
+
+			// I couldn't .ForEach the list because it was getting modified
+			// by StopPony which was messing this up, lol.
+
+			while(Main.PonyList.Count > 0) {
+				Main.PonyList[0].Window.OnClosePony();
+			}
+
 		}
 
 		private void OnAddPony(string name) {

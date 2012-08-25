@@ -31,7 +31,7 @@ namespace PonyApp {
 		// instance properties ////////////////////////////////////////////////
 
 		// pony properties
-		private String Name { get; set; }
+		public String Name { get; set; }
 		private int YOffset { get; set; }
 		private List<PonyAction> AvailableActions { get; set; }
 		private List<PonyAction> AvailableActiveActions { get; set; }
