@@ -3,26 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PonyApp
-{
-    public enum PonyAction
-    {
-        None    = 0, // an unknown for testing against.
-        Trot    = 1, // casual jogging 
-        Stand   = 2, // stay in one place, mostly idle, looking pretty.
-		Action1 = 3  // active personality action, something unique that pony does.
-    }
+namespace PonyApp {
+	public enum PonyAction {
+		None = 0,  // an unknown for testing against.
+		Trot,      // casual jogging across the screen.
+		Stand,     // stay in one place, mostly idle, looking pretty.
+		Action1,   // a active personality action.
+		Passive1,  // a passive personality action.
+		Gallop,    // sprinting across the screen.
+		Teleport   // teleporting somewhere else.
+	}
 
-	public enum PonyActionActive
-	{
+	public enum PonyActionActive {
 		None = 0,
 		Trot = PonyAction.Trot,
-		Action1 = PonyAction.Action1
-
+		Action1 = PonyAction.Action1,
+		Gallop = PonyAction.Gallop,
+		Teleport = PonyAction.Teleport
 	}
 
 	public enum PonyActionPassive {
 		None = 0,
-		Stand = PonyAction.Stand
+		Stand = PonyAction.Stand,
+		Passive1 = PonyAction.Passive1
 	}
 }

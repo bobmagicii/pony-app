@@ -602,7 +602,7 @@ namespace PonyApp {
 		private void Trot() {
 			// inialize the timer which will run the trot animation of the window movement.
 			this.WindowTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
-			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(20);
+			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(25);
 			this.WindowTimer.Tick += new EventHandler(this.TrotTick);
 			this.WindowTimer.Start();
 		}
@@ -622,17 +622,17 @@ namespace PonyApp {
 
 			// figure out if she has wallfaced and needs to change directions.
 			if(this.Direction == PonyDirection.Right) {
-				if(((this.Window.Left + this.Window.Width) + 3) >= SystemParameters.PrimaryScreenWidth) {
+				if(((this.Window.Left + this.Window.Width) + 4) >= SystemParameters.PrimaryScreenWidth) {
 					direction = PonyDirection.Left;
 				}
 			} else if(this.Direction == PonyDirection.Left) {
-				if((this.Window.Left - 3) <= 0) {
+				if((this.Window.Left - 4) <= 0) {
 					direction = PonyDirection.Right;
 				}
 			}
 
 			// update the window position.
-			this.Window.Left += (3 * (int)direction);
+			this.Window.Left += (4 * (int)direction);
 
 			if(direction != this.Direction) {
 				Trace.WriteLine(String.Format(

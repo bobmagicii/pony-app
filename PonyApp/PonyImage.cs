@@ -96,6 +96,7 @@ namespace PonyApp {
 
 			// set the image element to the animated gif.
 			ImageBehavior.SetAnimatedSource(win.Image,this.img);
+
 		}
 
 	}
