@@ -80,6 +80,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PonyAttributes.cs" />
     <Compile Include="PonyConfig.cs" />
     <Compile Include="PonyMode.cs" />
     <Compile Include="PonyDirection.cs" />
