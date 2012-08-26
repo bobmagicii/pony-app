@@ -21,44 +21,85 @@ namespace PonyApp {
 
 	public class Pony {
 
-		/* direction constants.
-		 * durr left and durr right. made them 1 and -1 so i could use them
-		 * in maths to flip flop. flipflopper. */
-
 		public static List<PonyDirection> ValidDirections { get; private set; }
 
 		///////////////////////////////////////////////////////////////////////
 		// instance properties ////////////////////////////////////////////////
 
-		// pony properties
+		/// <summary>
+		/// the name of the pony. also matches the folder name her images are
+		/// stored in.
+		/// </summary>
 		public String Name { get; set; }
+
+		/// <summary>
+		/// the yoffset is for fudging the pony's position to make her appear
+		/// to be standing on the taskbar. each pony is different as some of
+		/// them have animations that require more whitespace below their
+		/// hooves than others.
+		/// </summary>
 		private int YOffset { get; set; }
+
+		/// <summary>
+		/// lists of all the actions this pony said she is able to perform
+		/// in her this.pony file.
+		/// </summary>
 		private List<PonyAction> AvailableActions { get; set; }
 		private List<PonyAction> AvailableActiveActions { get; set; }
 		private List<PonyAction> AvailablePassiveActions { get; set; }
 
+		/// <summary>
+		/// the mode/mood/stance that the pony is currently in such as free
+		/// range, being still, or being clingy.
+		/// </summary>
 		public PonyMode Mode { get; set; }
+
+		/// <summary>
+		/// the action the pony is currently performing. things like trotting,
+		/// standing, whatever.
+		/// </summary>
 		public PonyAction Action { get; set; }
+
+		/// <summary>
+		/// the direction the pony is facing. e.g. to the left... or the right.
+		/// </summary>
 		public PonyDirection Direction { get; set; }
 
-		// physical properties
-		public PonyWindow Window;
-		private List<PonyImage> Image;
-		private Random RNG;
+		/// <summary>
+		/// this is the physical window on screen that the pony will manipulate
+		/// to perform her actions.
+		/// </summary>
+		public PonyWindow Window { get; set; }
 
-		// this timer is for moving the window around. unfortunately if the pc
-		// is too busy or i set it too fast, it slow down the gif rendering
-		// quite a bit as it shares the ui thread. problem is that
-		// system.timers.timer didn't have permissions to update the object
-		// owned by another thread.
+		/// <summary>
+		/// stores all the images this pony needs in a list so that we don't
+		/// have to ping disk every x seconds.
+		/// </summary>
+		public List<PonyImage> Image { get; set; }
+
+		/// <summary>
+		/// a random number generator seeded special for this pony.
+		/// </summary>
+		public Random RNG { get; set; }
+
+		/// <summary>
+		/// this timer is for moving the window around at an interval. however
+		/// as it is if too many ponies are moving the ui thread starts to
+		/// jitter, so i need to figure out how to put these in a separate
+		/// thread and still have permission to modify the pony objects.
+		/// </summary>
 		private DispatcherTimer WindowTimer;
 
-		// this timer is for when the pony decides it should do something else.
-		// time till bordem basically.
+		/// <summary>
+		/// this timer powers the choice engine that allows the pony to make her
+		/// own choices when she wants.
+		/// </summary>
 		private DispatcherTimer ChoiceTimer;
 
-		// this timer is for clingy mode for how often she checks to see where
-		// you are.
+		/// <summary>
+		/// this timer is for clingy mode where, every interval she will check
+		/// where the mouse cursor is and follow it.
+		/// </summary>
 		private DispatcherTimer ClingTimer;
 
 		/// <summary>
