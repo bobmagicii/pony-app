@@ -137,8 +137,8 @@ namespace PonyApp {
 
 			// prepare action properties.
 			this.Mode = PonyMode.Free;
-			this.Action = PonyAction.Stand;
-			this.Direction = PonyDirection.Right;
+			this.Action = PonyAction.None;
+			this.Direction = PonyDirection.None;
 
 			// various timers.
 			this.ChoiceTimer = null;
@@ -155,10 +155,18 @@ namespace PonyApp {
 
 			Trace.WriteLine(String.Format("// {0} says hello",this.Name));
 
-			// go ahead and do something now.
-			this.Window.PlaceRandomlyX();
+			// if a pony can teleport lets let them poof in.
+			if(this.CanDo(PonyAction.Teleport)) {
+				this.TeleportStage();
+			}
+
+			// else have them walk in from the edge.
+			else {
+				this.Window.Left = 0 - (this.Window.Width + 10);
+				this.TellWhatDo(PonyAction.Trot,PonyDirection.Right);
+			}
+
 			this.Window.Show();
-			this.ChooseWhatDo();
 		}
 
 		~Pony() {
@@ -523,6 +531,11 @@ namespace PonyApp {
 				case PonyAction.Teleport:
 					this.Window.AnimateOnce();
 					this.Teleport();
+					break;
+
+				case PonyAction.Teleport2:
+					this.Window.AnimateOnce();
+					// no action for this.
 					break;
 			}
 		}
