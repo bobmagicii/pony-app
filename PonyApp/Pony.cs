@@ -156,6 +156,8 @@ namespace PonyApp {
 			Trace.WriteLine(String.Format("// {0} says hello",this.Name));
 
 			// go ahead and do something now.
+			this.Window.PlaceRandomlyX();
+			this.Window.Show();
 			this.ChooseWhatDo();
 		}
 

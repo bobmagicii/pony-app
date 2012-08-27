@@ -30,7 +30,7 @@ namespace PonyApp {
 			this.Height = 1;
 			this.Title = "Pony";
 			this.Topmost = true;
-			this.Show();
+			this.Hide();
 
 			// reference to the pony.
 			this.Pony = Pony;
@@ -40,9 +40,6 @@ namespace PonyApp {
 
 			// set a mouse cursor for petting lol.
 			this.Cursor = Cursors.Hand;
-
-			// give a start position at random.
-			this.PlaceRandomlyX();
 
 			// enable moving the window by dragging anywhere.
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
