@@ -4,7 +4,7 @@
 	"YOffset": 10,
 	"Ponyality":{
 		"Laziness": 10,
-		"Quirkiness": 35,
+		"Quirkiness": 45,
 		"Spazziness": 5,
 		"Stamina": 0
 	}
