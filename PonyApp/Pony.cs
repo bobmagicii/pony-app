@@ -49,6 +49,11 @@ namespace PonyApp {
 		private List<PonyAction> AvailablePassiveActions { get; set; }
 
 		/// <summary>
+		/// ponyality structure that modifies her decision making.
+		/// </summary>
+		private Ponyality Ponyality { get; set; }
+
+		/// <summary>
 		/// the mode/mood/stance that the pony is currently in such as free
 		/// range, being still, or being clingy.
 		/// </summary>
@@ -112,6 +117,7 @@ namespace PonyApp {
 
 			this.Name = config.Name;
 			this.YOffset = config.YOffset;
+			this.Ponyality = config.Ponyality;
 
 			// prepare available action lists. 
 			this.AvailableActions = config.Actions;
@@ -212,7 +218,7 @@ namespace PonyApp {
 			// ponies in motion tend to stay in motion, while ponies at
 			// rest tend to stay at rest.
 
-			if(this.IsActionActive()) {
+			if(this.IsActive()) {
 				Trace.WriteLine(String.Format("// {0} feels energized",this.Name));
 
 				// personal quirks should be given a little longer to run than generic
@@ -263,12 +269,12 @@ namespace PonyApp {
 			// let the pony do whatever she wants if we are allowing here to
 			// frolic free.
 			else if(this.Mode == PonyMode.Free) {
-				choice = this.DecideByPersonality();
+				choice = this.DecideByPonyality();
 			}
 
 			// else fallback to being free if unknown mode is unknown.
 			else {
-				choice = this.DecideByPersonality();
+				choice = this.DecideByPonyality();
 			}
 
 			this.TellWhatDo(choice.Action, choice.Direction);
@@ -421,9 +427,10 @@ namespace PonyApp {
 		/// eventually this will be tweakable via the this.pony file for each
 		/// pony to make them all unique to their own respective personalities.
 		/// </summary>
-		private PonyState DecideByPersonality() {
+		private PonyState DecideByPonyality() {
 			var choice = new PonyState();
 			bool undecided = false;
+			bool lazy = false;
 
 			do {
 
@@ -431,22 +438,59 @@ namespace PonyApp {
 				choice.Direction = this.ChooseDirection();
 				undecided = false;
 
-				// pony generally like be lazy. if she is doing somethng lazy there is a
-				// greater chance she will not want to do something active.
-				if(!this.IsActionActive() && Pony.IsActionActive(choice.Action)) {
-					if(this.RandomChance(42)) {
-						Trace.WriteLine(String.Format("// {0} feels indecisive about what to do next.",this.Name));
-						undecided = true;
+				///////////////////////////////////////////////////////////////
+				// directional choices ////////////////////////////////////////
+
+				// direction choices are up for grabs every time a pony thinks
+				// she had decided what to do. if she elects to be indecisive
+				// about her actions later then she will rethink her direction
+				// as well.
+
+				// does the pony want to change directions? pony does not like
+				// to change direction too often while performing actions.
+				if(choice.Direction != this.Direction && !this.RandomChance(this.Ponyality.Spazziness)) {
+
+					// if pony is doing something active and will continue to
+					// do so then there is a higher chance she will not change
+					// directions.
+					if(this.IsActive() && Pony.IsActionActive(choice.Action))
+					choice.Direction = this.Direction;
+
+					// if pony is doing something active and she suddenly stops
+					// then this too will have a greater chance of not changing
+					// directions.
+					if(this.IsActive() && !Pony.IsActionActive(choice.Action))
+					choice.Direction = this.Direction;
+
+				}
+
+				///////////////////////////////////////////////////////////////
+				// action choices /////////////////////////////////////////////
+
+				// apply personality quirks to the pony's decision making
+				// system to allow for subdued but unique behaviour.
+
+				// if she has decided she is being lazy...
+				if(lazy) {
+					return this.DecideFromPassiveActions();
+				}
+
+				// pony generally like be lazy. if she is doing somethng lazy
+				// there is a greater chance she will not want to do something
+				// active.
+				if(!this.IsActive() && Pony.IsActionActive(choice.Action)) {
+					if(this.RandomChance(this.Ponyality.Laziness)) {
+						undecided = lazy = true;
 						continue;
 					}
 				}
 
-				// pony do not like to flaunt their personality quirks, if we selected
-				// one of the personality actions then there is a high chance she should
-				// be undecided. this should make the quirky actions more special when
-				// they do actually happen.
+				// pony do not like to flaunt their personality quirks, if we
+				// selected one of the personality actions then there is a high
+				// chance she should be undecided. this should make the quirky
+				// actions more special when they do actually happen.
 				if(choice.Action == PonyAction.Action1) {
-					if(this.RandomChance(80)) {
+					if(!this.RandomChance(this.Ponyality.Quirkiness)) {
 						undecided = true;
 						continue;
 					}
@@ -464,32 +508,11 @@ namespace PonyApp {
 				// pony may tire easy. if she is doing something active and has chosen to
 				// continue to be active, there is a chance she is too tired and will be
 				// lazy instead.
-				if(this.IsActionActive() && Pony.IsActionActive(choice.Action)) {
-					if(this.RandomChance(42)) {
-						return this.DecideFromPassiveActions();
+				if(this.IsActive() && Pony.IsActionActive(choice.Action)) {
+					if(!this.RandomChance(this.Ponyality.Stamina)) {
+						undecided = lazy = true;
+						continue;
 					}
-				}
-
-				// does the pony want to change directions? pony does not like
-				// to change direction too often while performing actions.
-				if(choice.Direction != this.Direction) {
-
-					// if pony is doing something active and will continue to do so then there
-					// is a higher chance she will not change directions.
-					if(this.IsActionActive() && Pony.IsActionActive(choice.Action)) {
-						if(this.RandomChance(70)) {
-							choice.Direction = this.Direction;
-						}
-					}
-
-					// if pony is doing something active and she suddenly stops then this too
-					// will have a greater chance of not changing directions.
-					if(this.IsActionActive() && !Pony.IsActionActive(choice.Action)) {
-						if(this.RandomChance(70)) {
-							choice.Direction = this.Direction;
-						}
-					}
-
 				}
 
 			} while(undecided);
@@ -573,7 +596,7 @@ namespace PonyApp {
 			// she might still be performing an action to prepare. we do not
 			// want to distract her. (stopping things like mousein mouseout
 			// from restarting the choice engine while on a mission)
-			if(this.Mode == PonyMode.Still && this.IsActionActive())
+			if(this.Mode == PonyMode.Still && this.IsActive())
 				return;
 
 			// if she is being clingy then she is too busy to get distracted
@@ -847,7 +870,7 @@ namespace PonyApp {
 		/// is the action she is currently doing considered an active action?
 		/// </summary>
 		/// <returns></returns>
-		public bool IsActionActive() {
+		public bool IsActive() {
 			return Pony.IsActionActive(this.Action);
 		}
 

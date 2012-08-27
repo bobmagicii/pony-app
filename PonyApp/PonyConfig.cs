@@ -29,6 +29,11 @@ namespace PonyApp {
 		/// </summary>
 		public int YOffset { get; set; }
 
+		/// <summary>
+		/// data for the pony's personality.
+		/// </summary>
+		public Ponyality Ponyality { get; set; }
+
 		/////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +41,10 @@ namespace PonyApp {
 		/// a static list of all the ponies found and good to go.
 		/// </summary>
 		public static List<PonyConfig> List = new List<PonyConfig>();
+
+		public PonyConfig() {
+			this.Ponyality = new Ponyality();
+		}
 
 		/// <summary>
 		/// Scan the resource directory for all the ponies currently available
@@ -70,9 +79,10 @@ namespace PonyApp {
 				}
 
 				Trace.WriteLine(String.Format(
-					"[JSON] SUCCESS Name: {0}, Actions Count: {1}",
+					"[JSON] SUCCESS Name: {0}, Actions Count: {1}, Laziness: {2}",
 					config.Name,
-					config.Actions.Count
+					config.Actions.Count,
+					config.Ponyality.Laziness
 				));
 
 				PonyConfig.List.Add(config);

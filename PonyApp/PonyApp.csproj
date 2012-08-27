@@ -85,6 +85,7 @@
     <Compile Include="PonyDirection.cs" />
     <Compile Include="PonyAction.cs" />
     <Compile Include="PonyImage.cs" />
+    <Compile Include="Ponyality.cs" />
     <Compile Include="PonyState.cs" />
     <Compile Include="PonyWindow.xaml.cs">
       <DependentUpon>PonyWindow.xaml</DependentUpon>
