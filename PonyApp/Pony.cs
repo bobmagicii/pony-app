@@ -141,6 +141,12 @@ namespace PonyApp {
 				this.AvailablePassiveActions.Count
 			));
 
+			Trace.WriteLine(String.Format(
+				"== {0} Ponyality:\r\n   {1}",
+				this.Name,
+				this.Ponyality.ToString()
+			));
+
 			// prepare action properties.
 			this.Mode = PonyMode.Free;
 			this.Action = PonyAction.None;
