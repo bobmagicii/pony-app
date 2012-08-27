@@ -251,8 +251,6 @@ namespace PonyApp {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		public void ChooseWhatDo(object sender, EventArgs e) {
-			// reset timer before choose, so choices can pause it.
-			this.ResetChoiceTimer();
 			this.ChooseWhatDo();
 		}
 
@@ -344,9 +342,9 @@ namespace PonyApp {
 			// if this is the first action our pony has done, then we also need to
 			// spool the decision engine up.
 			if(this.ChoiceTimer == null) {
-				ChoiceTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
-				ChoiceTimer.Tick += ChooseWhatDo;
-				ResetChoiceTimer();
+				this.ChoiceTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
+				this.ChoiceTimer.Tick += ChooseWhatDo;
+				this.ResetChoiceTimer();
 			}
 
 			// no need to muck with the image and window if we are doing more of the
@@ -356,6 +354,12 @@ namespace PonyApp {
 				this.Action = action;
 				this.Direction = direction;
 				this.StartAction();
+
+				// reset the choice timer to a new interval based on the action
+				// that just happened, but only if it was still enabled.
+				if(this.ChoiceTimer.IsEnabled)
+					this.ResetChoiceTimer();
+
 			}
 
 		}
@@ -496,16 +500,14 @@ namespace PonyApp {
 				// chance she should be undecided. this should make the quirky
 				// actions more special when they do actually happen.
 				if(choice.Action == PonyAction.Action1) {
-					if(!this.RandomChance(this.Ponyality.Quirkiness)) {
-						undecided = true;
-						continue;
-					}
+					undecided = !this.RandomChance(this.Ponyality.Quirkiness);
+					continue;
 				}
 				
 				// pony that can teleport generally do not teleport that often. i assume
 				// the action takes mana or something, lol.			
 				if(choice.Action == PonyAction.Teleport) {
-					if(this.RandomChance(42)) {
+					if(this.RandomChance(30)) {
 						undecided = true;
 						continue;
 					}
