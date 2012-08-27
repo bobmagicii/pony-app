@@ -84,7 +84,7 @@ namespace PonyApp {
 			));
 
 			// go pony go.
-			Main.StartPony("Rarity");
+			Main.StartPony("Twilight Sparkle");
 		}
 
 	}

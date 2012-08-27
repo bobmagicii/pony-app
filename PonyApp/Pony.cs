@@ -150,6 +150,7 @@ namespace PonyApp {
 
 			// preload action images.
 			this.LoadAllImages();
+			this.LoadImage();
 
 			Trace.WriteLine(String.Format("// {0} says hello",this.Name));
 
@@ -226,11 +227,9 @@ namespace PonyApp {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		public void ChooseWhatDo(object sender, EventArgs e) {
-
-			this.ChoiceTimer.Stop();
-			this.ChooseWhatDo();
+			// reset timer before choose, so choices can pause it.
 			this.ResetChoiceTimer();
-
+			this.ChooseWhatDo();
 		}
 
 		/// <summary>
@@ -242,6 +241,10 @@ namespace PonyApp {
 
 			// if we asked the pony to be still, restrict her options.
 			if(this.Mode == PonyMode.Still) {
+				Trace.WriteLine(String.Format(
+					"// {0} knows you would like her to be still",
+					this.Name
+				));
 				choice = this.DecideFromPassiveActions();
 			}
 
@@ -288,16 +291,22 @@ namespace PonyApp {
 		/// <param name="action"></param>
 		/// <param name="direction"></param>
 		public void TellWhatDo(PonyAction action, PonyDirection direction) {
+			bool able = true;
 
-			// can she do it? that is an important question to ask.
-			if(direction == PonyDirection.None || action == PonyAction.None || !this.CanDo(action)) {
+			// if an invalid action was specified, then no.
+			if(direction == PonyDirection.None || action == PonyAction.None) able = false;
+
+			// if this is an action she is not configured to be able to do then
+			// of course the answer is no.
+			if(!this.CanDo(action)) able = false;
+
+			if(!able) {
 				Trace.WriteLine(String.Format(
 					"!! {0} cannot {1} {2}",
 					this.Name,
 					action.ToString(),
 					direction.ToString()
 				));
-
 				return;
 			}
 
@@ -307,15 +316,6 @@ namespace PonyApp {
 				action.ToString(),
 				direction.ToString()
 			));
-		
-			// no need to muck with the image and window if we are doing more of the
-			// same yeh? also check choicetimer as a means of "is this the first
-			// action ever" to make sure the default gets loaded.
-			if((action != this.Action || direction != this.Direction) || this.ChoiceTimer == null) {
-				this.Action = action;
-				this.Direction = direction;
-				this.StartAction();
-			}
 
 			// if this is the first action our pony has done, then we also need to
 			// spool the decision engine up.
@@ -325,6 +325,15 @@ namespace PonyApp {
 				ResetChoiceTimer();
 			}
 
+			// no need to muck with the image and window if we are doing more of the
+			// same yeh? also check choicetimer as a means of "is this the first
+			// action ever" to make sure the default gets loaded.
+			if(action != this.Action || direction != this.Direction) {
+				this.Action = action;
+				this.Direction = direction;
+				this.StartAction();
+			}
+
 		}
 
 		/// <summary>
@@ -332,6 +341,12 @@ namespace PonyApp {
 		/// </summary>
 		/// <param name="action"></param>
 		public bool CanDo(PonyAction action) {
+
+			// allow anypony to teleport in if they can teleport out.
+			if(action == PonyAction.Teleport2)
+			return this.AvailableActions.Contains(PonyAction.Teleport);
+
+			else
 			return this.AvailableActions.Contains(action);
 		}
 
@@ -376,11 +391,6 @@ namespace PonyApp {
 		/// from her available passive actions.
 		/// </summary>
 		private PonyState DecideFromPassiveActions() {
-
-			Trace.WriteLine(String.Format(
-				"// {0} knows you would like her to be still",
-				this.Name
-			));
 
 			var choice = new PonyState {
 				Action = ChoosePassiveAction(),
@@ -494,11 +504,18 @@ namespace PonyApp {
 
 			switch(Action) {
 				case PonyAction.Trot:
+					this.Window.AnimateForever();
 					this.Trot();
 					break;
 
 				case PonyAction.Stand:
+					this.Window.AnimateForever();
 					this.Stand();
+					break;
+
+				case PonyAction.Teleport:
+					this.Window.AnimateOnce();
+					this.Teleport();
 					break;
 			}
 		}
@@ -519,7 +536,7 @@ namespace PonyApp {
 		/// she feels like it.
 		/// </summary>
 		public void PauseChoiceEngine() {
-			if(this.ChoiceTimer.IsEnabled) {
+			if(this.ChoiceTimer != null && this.ChoiceTimer.IsEnabled) {
 				Trace.WriteLine(String.Format("<< {0} holds off on making any more choices for now",this.Name));
 				this.ChoiceTimer.Stop();
 			}
@@ -642,7 +659,7 @@ namespace PonyApp {
 		/// </summary>
 		private void Trot() {
 			// inialize the timer which will run the trot animation of the window movement.
-			this.WindowTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
+			this.WindowTimer = new DispatcherTimer(DispatcherPriority.Loaded, this.Window.Dispatcher);
 			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(25);
 			this.WindowTimer.Tick += new EventHandler(this.TrotTick);
 			this.WindowTimer.Start();
@@ -697,6 +714,25 @@ namespace PonyApp {
 
 		}
 
+		/////////////////////////////////////////////////////////////////////////////
+		// PonyAction.Teleport //////////////////////////////////////////////////////
+
+		public void Teleport() {
+			this.PauseChoiceEngine();
+		}
+
+		public void TeleportStage() {
+			this.Window.Hide();
+			this.Window.PlaceRandomlyX();
+			this.TellWhatDo(PonyAction.Teleport2,this.ChooseDirection());
+			this.Window.Show();
+		}
+
+		public void TeleportFinish() {
+			this.ResumeChoiceEngine();
+			this.TellWhatDo(PonyAction.Stand,this.Direction);
+		}
+
 		///////////////////////////////////////////////////////////////////////
 		// image management methods ///////////////////////////////////////////
 
@@ -708,6 +744,11 @@ namespace PonyApp {
 			this.AvailableActions.ForEach(delegate(PonyAction action){
 				this.Image.Add(new PonyImage(this.Name, action, PonyDirection.Left));
 				this.Image.Add(new PonyImage(this.Name, action, PonyDirection.Right));
+
+				if(action == PonyAction.Teleport) {
+					this.Image.Add(new PonyImage(this.Name, PonyAction.Teleport2, PonyDirection.Left));
+					this.Image.Add(new PonyImage(this.Name, PonyAction.Teleport2, PonyDirection.Right));
+				}
 			});
 		}
 

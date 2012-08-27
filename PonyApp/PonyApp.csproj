@@ -70,7 +70,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WpfAnimatedGif, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="WpfAnimatedGif, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DLLs\WpfAnimatedGif.dll</HintPath>
     </Reference>
@@ -230,6 +230,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Twilight Sparkle\Action1Right.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Twilight Sparkle\Teleport2Left.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Twilight Sparkle\Teleport2Right.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Twilight Sparkle\TeleportLeft.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Twilight Sparkle\TeleportRight.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Twilight Sparkle\this.pony">

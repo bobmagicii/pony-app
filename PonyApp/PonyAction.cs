@@ -11,7 +11,8 @@ namespace PonyApp {
 		Action1,   // a active personality action.
 		Passive1,  // a passive personality action.
 		Gallop,    // sprinting across the screen.
-		Teleport   // teleporting somewhere else.
+		Teleport,  // teleporting somewhere else.
+		Teleport2  // teleporting in animation. (not directly callable)
 	}
 
 	public enum PonyActionActive {

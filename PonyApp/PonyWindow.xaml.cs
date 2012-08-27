@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfAnimatedGif;
+using System.Windows.Media.Animation;
 
 namespace PonyApp {
 
@@ -33,11 +35,48 @@ namespace PonyApp {
 			// reference to the pony.
 			this.Pony = Pony;
 
+			// notice when the animation finishes.
+			ImageBehavior.AddAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
 
 			this.Cursor = Cursors.Hand;
 
 			// enable moving the window by dragging anywhere.
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
+		}
+
+		public void PlaceRandomlyX() {
+			this.Left = this.Pony.RNG.Next(1,((int)SystemParameters.PrimaryScreenWidth - (int)this.Width));
+		}
+
+		public void AnimateOnce() {
+			ImageBehavior.SetRepeatBehavior(this.Image, new RepeatBehavior(1));
+		}
+
+		public void AnimateForever() {
+			ImageBehavior.SetRepeatBehavior(this.Image, RepeatBehavior.Forever);
+		}
+
+		private void OnAnimationFinish(Object sender, RoutedEventArgs e) {
+			
+			switch(this.Pony.Action) {
+				case PonyAction.Teleport:
+					this.Pony.TeleportStage();
+					break;
+				case PonyAction.Teleport2: {
+					this.Pony.TeleportFinish();
+					break;
+				}
+
+				default:
+					Trace.WriteLine("== generic animation finished");
+
+					// this is the wrong fix but the proper use of Forever is
+					// eluding me as the animation class is weird, and the
+					// wpfag library adds new complexity...
+					PonyImage.LoopCount(this.Pony.Window,99);
+					break;
+			}
+
 		}
 
 		private void OnWindowLoaded(object sender, RoutedEventArgs e) {

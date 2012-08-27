@@ -99,6 +99,15 @@ namespace PonyApp {
 
 		}
 
-	}
+		public static void LoopCount(PonyWindow win, double count) {
+			ImageBehavior.SetRepeatBehavior(
+				win.Image,
+				new System.Windows.Media.Animation.RepeatBehavior(count)	
+			);
+			return;
+		}
+		
 
+	}
+	
 }
