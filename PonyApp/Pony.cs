@@ -422,7 +422,7 @@ namespace PonyApp {
 				// pony generally like be lazy. if she is doing somethng lazy there is a
 				// greater chance she will not want to do something active.
 				if(!this.IsActionActive() && Pony.IsActionActive(choice.Action)) {
-					if(this.RNG.Next(1, 101) <= 42) {
+					if(this.RandomChance(42)) {
 						Trace.WriteLine(String.Format("// {0} feels indecisive about what to do next.",this.Name));
 						undecided = true;
 						continue;
@@ -434,20 +434,26 @@ namespace PonyApp {
 				// be undecided. this should make the quirky actions more special when
 				// they do actually happen.
 				if(choice.Action == PonyAction.Action1) {
-					if(this.RNG.Next(1, 101) <= 80) {
-						Trace.WriteLine(String.Format("// {0} feels bashful about her quirkiness.",this.Name));
+					if(this.RandomChance(80)) {
 						undecided = true;
 						continue;
 					}
 				}
 				
+				// pony that can teleport generally do not teleport that often. i assume
+				// the action takes mana or something, lol.			
+				if(choice.Action == PonyAction.Teleport) {
+					if(this.RandomChance(42)) {
+						undecided = true;
+						continue;
+					}
+				}
 
 				// pony may tire easy. if she is doing something active and has chosen to
 				// continue to be active, there is a chance she is too tired and will be
 				// lazy instead.
 				if(this.IsActionActive() && Pony.IsActionActive(choice.Action)) {
-					if(this.RNG.Next(1, 101) <= 42) {
-						Trace.WriteLine(String.Format(">> {0} needed a rest.",this.Name));
+					if(this.RandomChance(42)) {
 						return this.DecideFromPassiveActions();
 					}
 				}
@@ -459,8 +465,7 @@ namespace PonyApp {
 					// if pony is doing something active and will continue to do so then there
 					// is a higher chance she will not change directions.
 					if(this.IsActionActive() && Pony.IsActionActive(choice.Action)) {
-						if(this.RNG.Next(1, 101) <= 70) {
-							Trace.WriteLine(String.Format(">> {0}'s momentum carries her through",this.Name));
+						if(this.RandomChance(70)) {
 							choice.Direction = this.Direction;
 						}
 					}
@@ -468,8 +473,7 @@ namespace PonyApp {
 					// if pony is doing something active and she suddenly stops then this too
 					// will have a greater chance of not changing directions.
 					if(this.IsActionActive() && !Pony.IsActionActive(choice.Action)) {
-						if(this.RNG.Next(1, 101) <= 70) {
-							Trace.WriteLine(String.Format(">> {0} stops in her tracks",this.Name));
+						if(this.RandomChance(70)) {
 							choice.Direction = this.Direction;
 						}
 					}
@@ -717,17 +721,47 @@ namespace PonyApp {
 		/////////////////////////////////////////////////////////////////////////////
 		// PonyAction.Teleport //////////////////////////////////////////////////////
 
+		/// <summary>
+		/// prepare the pony for transport.
+		/// </summary>
 		public void Teleport() {
+			// do not make any more choices until the teleport sequence is over.
 			this.PauseChoiceEngine();
 		}
 
+		/// <summary>
+		/// this is called when the teleport (out) animation ends. it handles
+		/// moving the pony across the screen and staging teleporting back in.
+		/// </summary>
 		public void TeleportStage() {
+			int oldpos = (int)this.Window.Left;
+			PonyDirection dir = PonyDirection.None;
+
+			// yoink.
 			this.Window.Hide();
-			this.Window.PlaceRandomlyX();
-			this.TellWhatDo(PonyAction.Teleport2,this.ChooseDirection());
+
+			// make sure she at least went some distance.
+			do this.Window.PlaceRandomlyX();
+			while(Math.Abs(oldpos - this.Window.Left) < this.Window.Width);
+
+			// if she teleported to the right, face right. left, left.
+			// not technically correct as twilight has demonstrated the ability
+			// to rapid teleport side to side facing inwards each time, but on
+			// our 2d plane here this just looks nicer.
+			if(oldpos - this.Window.Left <= 0) dir = PonyDirection.Right;
+			else dir = PonyDirection.Left;
+
+			// start the second half of the teleport sequence.
+			this.TellWhatDo(PonyAction.Teleport2,dir);
+
+			// boink.
 			this.Window.Show();
 		}
 
+		/// <summary>
+		/// this is called with the teleporting (in) animation ends. return
+		/// the pony to normal behaviour.
+		/// </summary>
 		public void TeleportFinish() {
 			this.ResumeChoiceEngine();
 			this.TellWhatDo(PonyAction.Stand,this.Direction);
@@ -807,6 +841,16 @@ namespace PonyApp {
 		/// <returns></returns>
 		public static bool IsActionActive(PonyAction action) {
 			if(Enum.IsDefined(typeof(PonyActionActive), (int)action)) return true;
+			else return false;
+		}
+
+		/// <summary>
+		/// do a random chance rng pull given an integer percent value. meaning
+		/// if there is a 42% chance to do something, give it 42.
+		/// </summary>
+		/// <param name="percent"></param>
+		public bool RandomChance(int percent) {
+			if(this.RNG.Next(1,101) <= percent) return true;
 			else return false;
 		}
 
