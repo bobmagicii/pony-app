@@ -11,55 +11,39 @@ namespace PonyApp {
 		/// how likely she is to do something active after being passive. if
 		/// she is really lazy she will *probably* not be very energetic.
 		/// </summary>
-		private int _Laziness;
-		public  int  Laziness {
+		public int Laziness {
 			get { return this._Laziness; }
-			set {
-				if(!this.Range100(value)) this._Laziness = 42;
-				else this._Laziness = value;
-			}
-		}
+			set { this._Laziness = this.Range100(50+value); }
+		} private int _Laziness;
 
 		/// <summary>
 		/// scale 0 to 100, how quirky is this pony? this will modify how often
 		/// this pony's "special" things are likely to happen when she decides
 		/// to perform one.
 		/// </summary>
-		private int _Quirkiness;
-		public  int  Quirkiness {
+		public int Quirkiness {
 			get { return this._Quirkiness; }
-			set {
-				if(!this.Range100(value)) this._Quirkiness = 12;
-				else this._Quirkiness = value;
-			}
-		}
+			set { this._Quirkiness = this.Range100(10+value); }
+		} private int _Quirkiness;
 
 		/// <summary>
 		/// scale 0 to 100, how spazzy is this pony? this will modify how often
 		/// she does things like change directions.
 		/// </summary>
-		private int _Spazziness;
-		public  int  Spazziness {
+		public int Spazziness {
 			get { return this._Spazziness; }
-			set {
-				if(!this.Range100(value)) this._Spazziness = 30;
-				else this._Spazziness = value;
-			}
-		}
+			set { this._Spazziness = this.Range100(25+value); }
+		} private int _Spazziness;
 
 		/// <summary>
 		/// scale 0 to 100, how long can this pony keep going and going and
 		/// going? modifies things like how likely to do something active
 		/// after already having done something active.
 		/// </summary>
-		private int _Stamina;
-		public  int  Stamina {
+		public int Stamina {
 			get { return this._Stamina; }
-			set {
-				if(!this.Range100(value)) this._Stamina = 30;
-				else this._Stamina = value;
-			}
-		}
+			set { this._Stamina = this.Range100(15+value); }
+		} private int _Stamina;
 
 		///////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////
@@ -78,8 +62,10 @@ namespace PonyApp {
 		/// <summary>
 		/// provide a range check for 0 to 100.
 		/// </summary>
-		public bool Range100(int value) {
-			return (value >= 0 && value <= 100);
+		public int Range100(int value) {
+			if(value < 0) return 0;
+			else if(value > 100) return 100;
+			else return value;
 		}
 
 		/// <summary>

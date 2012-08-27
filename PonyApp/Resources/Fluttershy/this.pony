@@ -3,9 +3,9 @@
 	"Actions":["Stand","Trot","Action1"],
 	"YOffset": 10,
 	"Ponyality":{
-		"Laziness":70,
-		"Quirkiness":13,
-		"Spazziness":20,
-		"Stamina":19
+		"Laziness": 20,
+		"Quirkiness": 0,
+		"Spazziness": -10,
+		"Stamina": 0
 	}
 }
