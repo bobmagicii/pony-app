@@ -108,6 +108,8 @@ namespace PonyApp {
 		/// and passive) that this pony instance is capable of doing.
 		/// </summary>
 		public Pony(PonyConfig config) {
+			this.RNG = new Random();
+
 			this.Name = config.Name;
 			this.YOffset = config.YOffset;
 
@@ -143,9 +145,8 @@ namespace PonyApp {
 			this.WindowTimer = null;
 			this.ClingTimer = null;
 
-			// various utilities
+			// physical stuff.
 			this.Window = new PonyWindow(this);
-			this.RNG = new Random();
 			this.Image = new List<PonyImage>();
 
 			// preload action images.

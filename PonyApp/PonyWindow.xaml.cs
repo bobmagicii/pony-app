@@ -38,7 +38,11 @@ namespace PonyApp {
 			// notice when the animation finishes.
 			ImageBehavior.AddAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
 
+			// set a mouse cursor for petting lol.
 			this.Cursor = Cursors.Hand;
+
+			// give a start position at random.
+			this.PlaceRandomlyX();
 
 			// enable moving the window by dragging anywhere.
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
