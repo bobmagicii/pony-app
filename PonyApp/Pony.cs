@@ -151,17 +151,18 @@ namespace PonyApp {
 
 			// preload action images.
 			this.LoadAllImages();
-			this.LoadImage();
 
 			Trace.WriteLine(String.Format("// {0} says hello",this.Name));
 
 			// if a pony can teleport lets let them poof in.
 			if(this.CanDo(PonyAction.Teleport)) {
+				this.LoadImage(PonyAction.Teleport,PonyDirection.Right);
 				this.TeleportStage();
 			}
 
 			// else have them walk in from the edge.
 			else {
+				this.LoadImage(PonyAction.Trot, PonyDirection.Right);
 				this.Window.Left = 0 - (this.Window.Width + 10);
 				this.TellWhatDo(PonyAction.Trot,PonyDirection.Right);
 			}
