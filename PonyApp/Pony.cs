@@ -645,7 +645,7 @@ namespace PonyApp {
 
 			this.Mode = PonyMode.Clingy;
 			this.ClingTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.Window.Dispatcher);
-			this.ClingTimer.Interval = TimeSpan.FromMilliseconds(100);
+			this.ClingTimer.Interval = TimeSpan.FromMilliseconds(250);
 			this.ClingTimer.Tick += new EventHandler(this.ClingTick);
 			this.ClingTimer.Start();
 		}
@@ -656,11 +656,16 @@ namespace PonyApp {
 		private void ClingStop() {
 			Trace.WriteLine(String.Format("// pony {0} decides she doesn't need you.",this.Name));
 
-			this.Mode = PonyMode.Free;
 			this.ClingTimer.Stop();
 			this.ClingTimer = null;
 
-			this.ResumeChoiceEngine();
+			// if we were in clingy mode reset to free range. this is so we
+			// can have the timer catch itself when a menu item is clicked
+			// or something.
+			if(this.Mode == PonyMode.Clingy) {
+				this.Mode = PonyMode.Free;
+				this.ResumeChoiceEngine();
+			}
 		}
 
 		/// <summary>
@@ -675,6 +680,9 @@ namespace PonyApp {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void ClingTick(Object sender, EventArgs e) {
+
+			if(this.Mode != PonyMode.Clingy)
+				this.ClingStop();
 
 			double dist = ((this.Window.Left + (this.Window.Width / 2)) - System.Windows.Forms.Control.MousePosition.X);
 
