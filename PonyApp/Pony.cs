@@ -499,9 +499,16 @@ namespace PonyApp {
 				// selected one of the personality actions then there is a high
 				// chance she should be undecided. this should make the quirky
 				// actions more special when they do actually happen.
-				if(choice.Action == PonyAction.Action1) {
-					undecided = !this.RandomChance(this.Ponyality.Quirkiness);
-					continue;
+				switch(choice.Action) {
+					case PonyAction.Action1:
+						undecided = !this.RandomChance(this.Ponyality.Quirkiness);
+						continue;
+					case PonyAction.Action2:
+						undecided = !this.RandomChance(this.Ponyality.Quirkiness);
+						continue;
+					case PonyAction.Passive1:
+						undecided = !this.RandomChance(this.Ponyality.Quirkiness);
+						continue;
 				}
 				
 				// pony that can teleport generally do not teleport that often. i assume

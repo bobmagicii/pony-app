@@ -137,6 +137,26 @@ namespace PonyApp {
 
 		private void OnContextMenuOpen(object sender, RoutedEventArgs e) {
 
+			// reset the mode checkboxes.
+			this.StandLeft.IsChecked =
+			this.StandRight.IsChecked =
+			this.BeFree.IsChecked =
+			false;
+
+			// decide the mode box to check.
+			switch(this.Pony.Mode) {
+				case PonyMode.Free:
+					this.BeFree.IsChecked = true;
+					break;
+				case PonyMode.Still:
+					if(this.Left < 10) this.StandLeft.IsChecked = true;
+					else this.StandRight.IsChecked = true;
+					break;
+			}
+
+			// decide the on top checkbox.
+			this.OnTop.IsChecked = this.Topmost;
+
 		}
 
 		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {

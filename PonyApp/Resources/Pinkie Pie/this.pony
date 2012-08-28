@@ -1,6 +1,6 @@
 ﻿{
 	"Name":"Pinkie Pie",
-	"Actions":["Stand","Trot","Action1"],
+	"Actions":["Stand","Trot","Action1","Action2"],
 	"YOffset": 10,
 	"Ponyality":{
 		"Laziness": 10,

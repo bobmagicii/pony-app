@@ -7,14 +7,14 @@
 		<Image Name="Image" Width="200" Height="200"  Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center">
 			<Image.ContextMenu>
 				<ContextMenu Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
-					<MenuItem Header="Stand off to the Right" Click="TellHoldToRight" />
-					<MenuItem Header="Stand off to the Left" Click="TellHoldToLeft" />
-					<MenuItem Header="PONY BE FREE" Click="TellHasFreedom" />
+					<MenuItem Name="StandLeft" Header="Stand off to the Left" IsCheckable="True" Click="TellHoldToLeft" />
+					<MenuItem Name="StandRight" Header="Stand off to the Right" IsCheckable="True" Click="TellHoldToRight" />
+					<MenuItem Name="BeFree" Header="PONY BE FREE"  IsCheckable="True" Click="TellHasFreedom" />
 					<Separator />
 					<MenuItem Name="AddPonyMenu" Header="Add Pony" />
 					<MenuItem Name="ChangePonyMenu" Header="Change Pony" />
 					<Separator />
-					<MenuItem Header="Stay on top" Click="OnTopmostPony" IsCheckable="True" IsChecked="True" />
+					<MenuItem Name="OnTop" Header="Stay on top" Click="OnTopmostPony" IsCheckable="True" IsChecked="True" />
 					<Separator />
 					<MenuItem Header="Close this pony" Click="OnClosePony" />
 					<Separator />

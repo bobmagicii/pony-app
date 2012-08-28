@@ -8,8 +8,9 @@ namespace PonyApp {
 		None = 0,  // an unknown for testing against.
 		Trot,      // casual jogging across the screen.
 		Stand,     // stay in one place, mostly idle, looking pretty.
-		Action1,   // a active personality action.
-		Passive1,  // a passive personality action.
+		Action1,   // an active ponyality action.
+		Action2,   // an active ponyality action.
+		Passive1,  // a passive ponyality action.
 		Gallop,    // sprinting across the screen.
 		Teleport,  // teleporting somewhere else.
 		Teleport2  // teleporting in animation. (not directly callable)
