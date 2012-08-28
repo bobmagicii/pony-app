@@ -13,12 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WpfAnimatedGif;
 using System.Windows.Media.Animation;
+using System.Drawing;
 
 namespace PonyApp {
 
 	public partial class PonyWindow:Window {
 
 		public Pony Pony;
+		public PonyIcon Tray;
 
 		public PonyWindow(Pony Pony) {
 			InitializeComponent();
@@ -35,11 +37,15 @@ namespace PonyApp {
 			// reference to the pony.
 			this.Pony = Pony;
 
+			// tray icon.
+			this.Tray = new PonyIcon(this.Pony.Name);
+			this.Tray.Show();
+
 			// notice when the animation finishes.
 			ImageBehavior.AddAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
 
 			// set a mouse cursor for petting lol.
-			this.Cursor = Cursors.Hand;
+			this.Cursor = System.Windows.Input.Cursors.Hand;
 
 			// enable moving the window by dragging anywhere.
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
@@ -107,6 +113,9 @@ namespace PonyApp {
 		}
 
 		private void OnWindowClosed(object sender, EventArgs e) {
+			this.Tray.Hide();
+			this.Tray = null;
+
 			Main.StopPony(this.Pony);
 		}
 
@@ -138,9 +147,9 @@ namespace PonyApp {
 		private void OnContextMenuOpen(object sender, RoutedEventArgs e) {
 
 			// reset the mode checkboxes.
-			this.StandLeft.IsChecked =
+			this.StandLeft.IsChecked  =
 			this.StandRight.IsChecked =
-			this.BeFree.IsChecked =
+			this.BeFree.IsChecked     =
 			false;
 
 			// decide the mode box to check.
