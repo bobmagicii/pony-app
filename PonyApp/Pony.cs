@@ -182,29 +182,36 @@ namespace PonyApp {
 			this.Window.Show();
 		}
 
-		~Pony() {
-			Trace.WriteLine(String.Format("== {0} object destructed",this.Name));
-		}
+		public void Free() {
 
-		public void Shutdown() {
+			Trace.WriteLine(String.Format("// {0} waves goodbye", this.Name));
+
+			// stop and trash all the timers.
 			if(this.WindowTimer != null) this.WindowTimer.Stop();
 			if(this.ChoiceTimer != null) this.ChoiceTimer.Stop();
 			if(this.ClingTimer != null) this.ClingTimer.Stop();
-
 			this.WindowTimer = this.ChoiceTimer = this.ClingTimer = null;
 
+			// release all the images we cached.
 			this.Image.ForEach(delegate(PonyImage img){
 				img.Free();
 				img = null;
 			});
 			this.Image.Clear();
+			this.Image = null;
 
-			this.Window.Pony = null;
+			// release the window.
+			this.Window.Hide();
+			this.Window.Free();
 			this.Window = null;
 
+			// release the action lists.
+			this.AvailableActions.Clear();
+			this.AvailableActiveActions.Clear();
+			this.AvailablePassiveActions.Clear();
 			this.AvailableActions = this.AvailableActiveActions = this.AvailablePassiveActions = null;
+			this.Ponyality = null;
 
-			Trace.WriteLine(String.Format("// {0} waves goodbye",this.Name));
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -558,23 +565,15 @@ namespace PonyApp {
 
 			switch(Action) {
 				case PonyAction.Trot:
-					this.Window.AnimateForever();
 					this.Trot();
 					break;
 
 				case PonyAction.Stand:
-					this.Window.AnimateForever();
 					this.Stand();
 					break;
 
 				case PonyAction.Teleport:
-					this.Window.AnimateOnce();
 					this.Teleport();
-					break;
-
-				case PonyAction.Teleport2:
-					this.Window.AnimateOnce();
-					// no action for this.
 					break;
 			}
 		}
@@ -714,7 +713,7 @@ namespace PonyApp {
 		/// stand there and look pretty.
 		/// </summary>
 		private void Stand() {
-
+			this.Window.AnimateForever();
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -725,6 +724,8 @@ namespace PonyApp {
 		/// whichever direction she is currently facing.
 		/// </summary>
 		private void Trot() {
+			this.Window.AnimateForever();
+
 			// inialize the timer which will run the trot animation of the window movement.
 			this.WindowTimer = new DispatcherTimer(DispatcherPriority.Loaded, this.Window.Dispatcher);
 			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(25);
@@ -789,6 +790,7 @@ namespace PonyApp {
 		/// </summary>
 		public void Teleport() {
 			// do not make any more choices until the teleport sequence is over.
+			this.Window.AnimateOnce();
 			this.PauseChoiceEngine();
 		}
 
@@ -815,6 +817,7 @@ namespace PonyApp {
 			else dir = PonyDirection.Left;
 
 			// start the second half of the teleport sequence.
+			this.Window.AnimateOnce();
 			this.TellWhatDo(PonyAction.Teleport2,dir);
 
 			// boink.

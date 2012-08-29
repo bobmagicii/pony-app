@@ -41,9 +41,6 @@ namespace PonyApp {
 			this.Tray = new PonyIcon(this.Pony.Name);
 			this.Tray.Show();
 
-			// notice when the animation finishes.
-			ImageBehavior.AddAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
-
 			// set a mouse cursor for petting lol.
 			this.Cursor = System.Windows.Input.Cursors.Hand;
 
@@ -51,20 +48,39 @@ namespace PonyApp {
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
 		}
 
+		public void Free() {
+
+			// dispose of tray icon.
+			this.Tray.Hide();
+			this.Tray.Free();
+			this.Tray = null;
+
+			// release references.
+			this.Pony = null;
+
+		}
+
+		/// <summary>
+		/// moves this window to a random location on the x axis taking into
+		/// consideration the width of the window to make sure it spawns on
+		/// screen.
+		/// </summary>
 		public void PlaceRandomlyX() {
 			this.Left = this.Pony.RNG.Next(1,((int)SystemParameters.PrimaryScreenWidth - (int)this.Width));
 		}
 
 		public void AnimateOnce() {
 			ImageBehavior.SetRepeatBehavior(this.Image, new RepeatBehavior(1));
+			ImageBehavior.AddAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
 		}
 
 		public void AnimateForever() {
 			ImageBehavior.SetRepeatBehavior(this.Image, RepeatBehavior.Forever);
+			ImageBehavior.RemoveAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
 		}
 
 		private void OnAnimationFinish(Object sender, RoutedEventArgs e) {
-			
+
 			switch(this.Pony.Action) {
 				case PonyAction.Teleport:
 					this.Pony.TeleportStage();
@@ -73,15 +89,6 @@ namespace PonyApp {
 					this.Pony.TeleportFinish();
 					break;
 				}
-
-				default:
-					Trace.WriteLine("== generic animation finished");
-
-					// this is the wrong fix but the proper use of Forever is
-					// eluding me as the animation class is weird, and the
-					// wpfag library adds new complexity...
-					PonyImage.LoopCount(this.Pony.Window,99);
-					break;
 			}
 
 		}
@@ -113,9 +120,6 @@ namespace PonyApp {
 		}
 
 		private void OnWindowClosed(object sender, EventArgs e) {
-			this.Tray.Hide();
-			this.Tray = null;
-
 			Main.StopPony(this.Pony);
 		}
 

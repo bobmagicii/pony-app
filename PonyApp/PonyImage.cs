@@ -31,6 +31,18 @@ namespace PonyApp {
 		///////////////////////////////////////////////////////////////////////
 		// image selecting ////////////////////////////////////////////////////
 
+		public static Uri SelectImagePath(string name, string file) {
+			return new Uri(
+				String.Format(
+					"{0}Resources\\{1}\\{2}",
+					AppDomain.CurrentDomain.BaseDirectory,
+					name,
+					file
+				),
+				UriKind.Absolute
+			);
+		}
+
 		public static Uri SelectImagePath(string name, PonyAction action, PonyDirection direction) {
 			return new Uri(
 				String.Format(

@@ -61,7 +61,7 @@ namespace PonyApp {
 		/// </summary>
 		public static void StopPony(Pony pone) {
 			Main.PonyList.Remove(pone);
-			pone.Shutdown();
+			pone.Free();
 			pone = null;
 			
 
