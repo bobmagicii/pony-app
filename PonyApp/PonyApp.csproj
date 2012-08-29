@@ -232,6 +232,12 @@
     <Content Include="Resources\Rarity\Action1Right.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Rarity\Mark.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Rarity\MarkSmall.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Rarity\this.pony">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
