@@ -119,8 +119,8 @@ namespace PonyApp {
 			this.YOffset = config.YOffset;
 			this.Ponyality = config.Ponyality;
 
-			// prepare available action lists. 
-			this.AvailableActions = config.Actions;
+			// prepare available action lists. copy on purpose.
+			this.AvailableActions = new List<PonyAction>(config.Actions);
 			this.AvailableActiveActions = new List<PonyAction>();
 			this.AvailablePassiveActions = new List<PonyAction>();
 
@@ -211,7 +211,6 @@ namespace PonyApp {
 			this.AvailablePassiveActions.Clear();
 			this.AvailableActions = this.AvailableActiveActions = this.AvailablePassiveActions = null;
 			this.Ponyality = null;
-
 		}
 
 		///////////////////////////////////////////////////////////////////////
