@@ -34,6 +34,10 @@ namespace PonyApp {
 		/// </summary>
 		public Ponyality Ponyality { get; set; }
 
+		public PonyConfig() {
+			this.Ponyality = new Ponyality();
+		}
+
 		/////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////
 
@@ -41,10 +45,6 @@ namespace PonyApp {
 		/// a static list of all the ponies found and good to go.
 		/// </summary>
 		public static List<PonyConfig> List = new List<PonyConfig>();
-
-		public PonyConfig() {
-			this.Ponyality = new Ponyality();
-		}
 
 		/// <summary>
 		/// Scan the resource directory for all the ponies currently available

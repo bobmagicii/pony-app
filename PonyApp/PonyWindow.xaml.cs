@@ -48,6 +48,9 @@ namespace PonyApp {
 			// this.MouseLeftButtonDown += new MouseButtonEventHandler(OnWindowDragAction);
 		}
 
+		/// <summary>
+		/// releases the resources and references this window has.
+		/// </summary>
 		public void Free() {
 
 			// dispose of tray icon.
@@ -69,16 +72,26 @@ namespace PonyApp {
 			this.Left = this.Pony.RNG.Next(1,((int)SystemParameters.PrimaryScreenWidth - (int)this.Width));
 		}
 
+		/// <summary>
+		/// set the animation to only loop once and then callback.
+		/// </summary>
 		public void AnimateOnce() {
 			ImageBehavior.SetRepeatBehavior(this.Image, new RepeatBehavior(1));
 			ImageBehavior.AddAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
 		}
 
+		/// <summary>
+		/// set the animation to loop forever and disable the callback.
+		/// </summary>
 		public void AnimateForever() {
 			ImageBehavior.SetRepeatBehavior(this.Image, RepeatBehavior.Forever);
 			ImageBehavior.RemoveAnimationCompletedHandler(this.Image,this.OnAnimationFinish);
 		}
 
+		/// <summary>
+		/// the callback for when the animations end, useful for staging the
+		/// next phase.
+		/// </summary>
 		private void OnAnimationFinish(Object sender, RoutedEventArgs e) {
 
 			switch(this.Pony.Action) {
