@@ -7,6 +7,8 @@
 		<Image Name="Image" Width="200" Height="200"  Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center">
 			<Image.ContextMenu>
 				<ContextMenu Name="MainMenu" Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
+					<MenuItem Name="Menu_PonyName" IsEnabled="False" />
+					<Separator />
 					<MenuItem Name="StandLeft" Header="Stand off to the Left" IsCheckable="True" Click="TellHoldToLeft" />
 					<MenuItem Name="StandRight" Header="Stand off to the Right" IsCheckable="True" Click="TellHoldToRight" />
 					<MenuItem Name="BeFree" Header="PONY BE FREE"  IsCheckable="True" Click="TellHasFreedom" />

@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using WpfAnimatedGif;
 using System.Windows.Media.Animation;
 using System.Drawing;
+using System.IO;
 
 namespace PonyApp {
 
@@ -107,6 +108,17 @@ namespace PonyApp {
 		}
 
 		private void OnWindowLoaded(object sender, RoutedEventArgs e) {
+			System.Windows.Controls.Image icon;
+			Uri iconpath;
+
+			// pony name menu item.
+			iconpath = PonyImage.SelectImagePath(this.Pony.Name,"MarkSmall.png");
+			if(File.Exists(iconpath.LocalPath)) {
+				icon = new System.Windows.Controls.Image();
+				icon.Source = new BitmapImage(iconpath);
+				this.Menu_PonyName.Icon = icon;
+			}
+			this.Menu_PonyName.Header = this.Pony.Name;
 
 			// update the menu system with the ponies.
 			PonyConfig.List.ForEach(delegate(PonyConfig pony) {
