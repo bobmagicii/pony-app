@@ -558,6 +558,10 @@ namespace PonyApp {
 			// load the new image.
 			this.LoadImage();
 
+			// most animations should repeat forever. ones that want to loop
+			// once and then callback will set that themselves after.
+			this.Window.AnimateForever();
+
 			// place the window just above the task bar so it looks like they
 			// be walkin on it. this might be broken on multi-head or non
 			// bottom taskbars.
@@ -567,11 +571,6 @@ namespace PonyApp {
 				case PonyAction.Trot:
 					this.Trot();
 					break;
-
-				case PonyAction.Stand:
-					this.Stand();
-					break;
-
 				case PonyAction.Teleport:
 					this.Teleport();
 					break;
@@ -707,16 +706,6 @@ namespace PonyApp {
 		}
 
 		///////////////////////////////////////////////////////////////////////
-		// PonyAction.Stand ///////////////////////////////////////////////////
-
-		/// <summary>
-		/// stand there and look pretty.
-		/// </summary>
-		private void Stand() {
-			this.Window.AnimateForever();
-		}
-
-		///////////////////////////////////////////////////////////////////////
 		// PonyAction.Trot ////////////////////////////////////////////////////
 
 		/// <summary>
@@ -724,8 +713,6 @@ namespace PonyApp {
 		/// whichever direction she is currently facing.
 		/// </summary>
 		private void Trot() {
-			this.Window.AnimateForever();
-
 			// inialize the timer which will run the trot animation of the window movement.
 			this.WindowTimer = new DispatcherTimer(DispatcherPriority.Loaded, this.Window.Dispatcher);
 			this.WindowTimer.Interval = TimeSpan.FromMilliseconds(25);
@@ -817,8 +804,8 @@ namespace PonyApp {
 			else dir = PonyDirection.Left;
 
 			// start the second half of the teleport sequence.
-			this.Window.AnimateOnce();
 			this.TellWhatDo(PonyAction.Teleport2,dir);
+			this.Window.AnimateOnce();
 
 			// boink.
 			this.Window.Show();
