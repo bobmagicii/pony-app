@@ -6,7 +6,7 @@
 	<Grid Name="MainGrid">
 		<Image Name="Image" Width="200" Height="200"  Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center">
 			<Image.ContextMenu>
-				<ContextMenu Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
+				<ContextMenu Name="MainMenu" Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
 					<MenuItem Name="StandLeft" Header="Stand off to the Left" IsCheckable="True" Click="TellHoldToLeft" />
 					<MenuItem Name="StandRight" Header="Stand off to the Right" IsCheckable="True" Click="TellHoldToRight" />
 					<MenuItem Name="BeFree" Header="PONY BE FREE"  IsCheckable="True" Click="TellHasFreedom" />
@@ -19,6 +19,8 @@
 					<MenuItem Header="Close this pony" Click="OnClosePony" />
 					<Separator />
 					<MenuItem Header="Close all pony" Click="OnCloseAllPony" />
+					<Separator />
+					<MenuItem Header="Cancel Menu" />
 				</ContextMenu>
 			</Image.ContextMenu>
 		</Image>

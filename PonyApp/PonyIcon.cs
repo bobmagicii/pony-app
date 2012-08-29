@@ -9,13 +9,16 @@ using System.IO;
 namespace PonyApp {
 	public class PonyIcon {
 
+		public Pony Pony;
 		public NotifyIcon Icon;
 
-		public PonyIcon(string name) {
+		public PonyIcon(Pony pone) {
 			string path;
 
+			this.Pony = pone;
+
 			// check that the icon we want exists.
-			path = PonyImage.SelectImagePath(name,"MarkSmall.png").LocalPath;
+			path = PonyImage.SelectImagePath(pone.Name,"MarkSmall.png").LocalPath;
 			if(!File.Exists(path)) return;
 
 			// create the tray icon.
@@ -24,8 +27,16 @@ namespace PonyApp {
 			// load the image and convert it to an icon resource.
 			this.Icon.Icon = System.Drawing.Icon.FromHandle((new Bitmap(path)).GetHicon());
 
+			// connect some signals.
+			this.Icon.MouseClick += this.OnMouseClick;
+
 			this.Show();
 			return;
+		}
+
+		public void OnMouseClick(object sender, EventArgs e) {
+			this.Pony.Window.MainMenu.IsOpen = true;
+			this.Pony.Window.MainMenu.Focus();
 		}
 
 		public void Free() {
@@ -34,6 +45,8 @@ namespace PonyApp {
 				this.Icon.Dispose();
 				this.Icon = null;
 			}
+
+			this.Pony = null;
 		}
 
 		public void Hide() {

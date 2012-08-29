@@ -38,7 +38,7 @@ namespace PonyApp {
 			this.Pony = Pony;
 
 			// tray icon.
-			this.Tray = new PonyIcon(this.Pony.Name);
+			this.Tray = new PonyIcon(this.Pony);
 			this.Tray.Show();
 
 			// set a mouse cursor for petting lol.
