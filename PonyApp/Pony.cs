@@ -110,7 +110,7 @@ namespace PonyApp {
 		/// this timer powers the choice engine that allows the pony to make her
 		/// own choices when she wants.
 		/// </summary>
-		private DispatcherTimer ChoiceTimer;
+		public DispatcherTimer ChoiceTimer { get; set; }
 
 		/// <summary>
 		/// this timer is for clingy mode where, every interval she will check

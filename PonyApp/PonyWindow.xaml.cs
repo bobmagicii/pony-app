@@ -120,6 +120,13 @@ namespace PonyApp {
 			}
 			this.Menu_PonyName.Header = this.Pony.Name;
 
+			// hide/show the time of day sleep option.
+			if(!this.Pony.CanDo(PonyAction.Sleep)) 
+				this.SleepTOD.Visibility = System.Windows.Visibility.Collapsed;
+			else
+				this.SleepTOD.Visibility = System.Windows.Visibility.Visible;
+			
+
 			// update the menu system with the ponies.
 			PonyConfig.List.ForEach(delegate(PonyConfig pony) {
 				MenuItem item;
@@ -178,7 +185,6 @@ namespace PonyApp {
 		}
 
 		private void OnDoubleClick(object sender, MouseButtonEventArgs e) {
-			Trace.WriteLine("~~ window was double clicked");
 			this.Pony.ClingToggle();
 		}
 
@@ -227,9 +233,24 @@ namespace PonyApp {
 			this.TopmostPony.IsChecked = this.Topmost;
 			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
+/*
+			// fade out the other ponies.
+			Main.PonyList.ForEach(delegate(Pony p){
+				p.Window.Opacity = 0.4;
+			});
+			this.Opacity = 1.0;
+*/
+			
 		}
 
 		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
+
+/*
+			// bring all the ponies to full.
+			Main.PonyList.ForEach(delegate(Pony p) {
+				p.Window.Opacity = 1.0;
+			});
+*/
 
 		}
 
