@@ -254,7 +254,7 @@ namespace PonyApp {
 
 				// sleeping should be given a long time.
 				if(this.Action == PonyAction.Sleep)
-				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(10,15)*3600);
+				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(15,30)*60);
 
 				else
 				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(12, 20));
