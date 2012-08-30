@@ -17,13 +17,14 @@
 					<MenuItem Name="AddPonyMenu" Header="Add Pony" />
 					<MenuItem Name="ChangePonyMenu" Header="Change Pony" />
 					<Separator />
-					<MenuItem Name="OnTop" Header="Stay on top" Click="OnTopmostPony" IsCheckable="True" IsChecked="True" />
+					<MenuItem Name="TopmostPony" Header="Stay on top" Click="OnTopmostPony" IsCheckable="True" />
+					<MenuItem Name="SleepTOD" Header="Sleep with Time of Day" Click="OnSleepTOD" IsCheckable="True" />
 					<Separator />
-					<MenuItem Header="Close this pony" Click="OnClosePony" />
+					<MenuItem Header="Dismiss this Pony" Click="OnClosePony" />
 					<Separator />
-					<MenuItem Header="Close all pony" Click="OnCloseAllPony" />
+					<MenuItem Header="Dismiss all the Pony" Click="OnCloseAllPony" />
 					<Separator />
-					<MenuItem Header="Cancel Menu" />
+					<MenuItem Header="Cancel this menu" />
 				</ContextMenu>
 			</Image.ContextMenu>
 		</Image>

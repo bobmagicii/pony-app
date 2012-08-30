@@ -224,7 +224,8 @@ namespace PonyApp {
 			}
 
 			// decide the on top checkbox.
-			this.OnTop.IsChecked = this.Topmost;
+			this.TopmostPony.IsChecked = this.Topmost;
+			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
 		}
 
@@ -251,7 +252,6 @@ namespace PonyApp {
 
 		private void OnTopmostPony(object sender, RoutedEventArgs e) {
 			this.Pony.Window.Topmost = !this.Pony.Window.Topmost;
-			((MenuItem)sender).IsChecked = this.Pony.Window.Topmost;
 		}
 
 		private void OnClosePony(object sender, RoutedEventArgs e) {
@@ -280,6 +280,10 @@ namespace PonyApp {
 		private void OnChangePony(string name) {
 			Main.StartPony(name);
 			this.OnClosePony();
+		}
+
+		private void OnSleepTOD(object sender, RoutedEventArgs e) {
+			this.Pony.SleepTOD = !this.Pony.SleepTOD;
 		}
 
 	}

@@ -47,6 +47,11 @@ namespace PonyApp {
 		private double Energy { get; set; }
 
 		/// <summary>
+		/// if she should sleep depending on the time of day (and night).
+		/// </summary>
+		public bool SleepTOD { get; set; }
+
+		/// <summary>
 		/// lists of all the actions this pony said she is able to perform
 		/// in her this.pony file.
 		/// </summary>
@@ -124,7 +129,8 @@ namespace PonyApp {
 			this.Name = config.Name;
 			this.YOffset = config.YOffset;
 			this.Ponyality = config.Ponyality;
-			this.Energy = 100;
+			this.Energy = 400;
+			this.SleepTOD = true;
 
 			// prepare available action lists. copy on purpose.
 			this.AvailableActions = new List<PonyAction>(config.Actions);
@@ -282,6 +288,17 @@ namespace PonyApp {
 		public void ChooseWhatDo() {
 			PonyState choice;
 
+			// if it is late (or early) the pony should sleep like anypony
+			// would. the 15-30min choice timer will still engage so at most
+			// she will roll over from side to side while sleeping.
+			if(this.SleepTOD) {
+				if(DateTime.Now.Hour >= 23 || DateTime.Now.Hour <= 8) {
+					this.EnergyReset();
+					this.TellWhatDo(PonyAction.Sleep,this.ChooseDirection());
+					return;
+				}
+			}
+
 			// if we asked the pony to be still, restrict her options.
 			if(this.Mode == PonyMode.Still) {
 				Trace.WriteLine(String.Format(
@@ -383,6 +400,8 @@ namespace PonyApp {
 
 			}
 
+			// spend the energy associated with this action.
+			this.EnergySpend();
 		}
 
 		/// <summary>
@@ -446,8 +465,6 @@ namespace PonyApp {
 				Direction = ChooseDirection()
 			};
 
-			this.Energy -= 0.5;
-
 			return choice;
 		}
 
@@ -477,13 +494,13 @@ namespace PonyApp {
 						choice.Action = this.DecideFromPassiveActions().Action;
 					} else {
 						choice.Action = PonyAction.Sleep;
-						this.Energy = 100;
+						this.Energy = 400;
 					}
 
 					return choice;
 				} else {
 					// else just reset it.
-					this.Energy = 100;
+					this.Energy = 400;
 				}
 			}
 
@@ -583,12 +600,6 @@ namespace PonyApp {
 
 			} while(undecided);
 
-			if(Pony.IsActionActive(choice.Action)) this.Energy -= 1;
-			else this.Energy -= 0.5;
-
-			Trace.WriteLine(String.Format("++ {0} energy: {1}",this.Name,this.Energy));
-
-
 			return choice;
 		}
 
@@ -672,6 +683,21 @@ namespace PonyApp {
 				Trace.WriteLine(String.Format("<< {0} left to her own devices",this.Name));
 				this.ChoiceTimer.Start();
 			}
+		}
+
+		/// <summary>
+		/// reset her energy reserve.
+		/// </summary>
+		public void EnergyReset() {
+			this.Energy = 400;
+		}
+
+		/// <summary>
+		/// mark energy as spent.
+		/// </summary>
+		public void EnergySpend() {
+			if(this.IsActive()) this.Energy -= 1;
+			else this.Energy -= 0.5;
 		}
 
 		///////////////////////////////////////////////////////////////////////
