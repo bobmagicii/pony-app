@@ -401,6 +401,7 @@ namespace PonyApp {
 			}
 
 			// spend the energy associated with this action.
+			if(this.Mode != PonyMode.Clingy)
 			this.EnergySpend();
 		}
 
