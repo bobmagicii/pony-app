@@ -41,12 +41,18 @@ namespace PonyApp {
 		private int YOffset { get; set; }
 
 		/// <summary>
+		/// an number 0 to 100 that represents how much energy this pony has.
+		/// when a pony hits 0 energy then she sleeps.
+		/// </summary>
+		private double Energy { get; set; }
+
+		/// <summary>
 		/// lists of all the actions this pony said she is able to perform
 		/// in her this.pony file.
 		/// </summary>
-		private List<PonyAction> AvailableActions { get; set; }
-		private List<PonyAction> AvailableActiveActions { get; set; }
-		private List<PonyAction> AvailablePassiveActions { get; set; }
+		public List<PonyAction> AvailableActions { get; private set; }
+		public List<PonyAction> AvailableActiveActions { get; private set; }
+		public List<PonyAction> AvailablePassiveActions { get; private set; }
 
 		/// <summary>
 		/// ponyality structure that modifies her decision making.
@@ -118,6 +124,7 @@ namespace PonyApp {
 			this.Name = config.Name;
 			this.YOffset = config.YOffset;
 			this.Ponyality = config.Ponyality;
+			this.Energy = 100;
 
 			// prepare available action lists. copy on purpose.
 			this.AvailableActions = new List<PonyAction>(config.Actions);
@@ -235,13 +242,21 @@ namespace PonyApp {
 
 				// personal quirks should be given a little longer to run than generic
 				// actions.
-				if(this.Action == PonyAction.Action1)
-					this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(6, 10));
+				if(this.Action == PonyAction.Action1 || this.Action == PonyAction.Action2)
+				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(6, 10));
+
+				// default action time.
 				else
-					this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(4, 8));
+				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(4, 8));
 
 			} else {
 				Trace.WriteLine(String.Format("// {0} feels lazy", this.Name));
+
+				// sleeping should be given a long time.
+				if(this.Action == PonyAction.Sleep)
+				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(10,15)*3600);
+
+				else
 				this.ChoiceTimer.Interval = TimeSpan.FromSeconds(this.RNG.Next(12, 20));
 			}
 
@@ -431,6 +446,8 @@ namespace PonyApp {
 				Direction = ChooseDirection()
 			};
 
+			this.Energy -= 0.5;
+
 			return choice;
 		}
 
@@ -447,6 +464,28 @@ namespace PonyApp {
 			var choice = new PonyState();
 			bool undecided = false;
 			bool lazy = false;
+
+			// if the pony is too tired then she should go to sleep. if she can
+			// sleep, that is.
+			if(this.Energy <= 0) {
+				if(this.CanDo(PonyAction.Sleep)) {
+					choice.Direction = this.Direction;
+
+					// if she is doing something active, stop first instead of
+					// just falling asleep in mid sprint.
+					if(this.IsActive()) {
+						choice.Action = this.DecideFromPassiveActions().Action;
+					} else {
+						choice.Action = PonyAction.Sleep;
+						this.Energy = 100;
+					}
+
+					return choice;
+				} else {
+					// else just reset it.
+					this.Energy = 100;
+				}
+			}
 
 			do {
 
@@ -485,6 +524,12 @@ namespace PonyApp {
 
 				// apply personality quirks to the pony's decision making
 				// system to allow for subdued but unique behaviour.
+
+				// don't ever do these.
+				if(choice.Action == PonyAction.Sleep || choice.Action == PonyAction.Teleport2) {
+					undecided = true;
+					continue;
+				}
 
 				// if she has decided she is being lazy...
 				if(lazy) {
@@ -537,6 +582,12 @@ namespace PonyApp {
 				}
 
 			} while(undecided);
+
+			if(Pony.IsActionActive(choice.Action)) this.Energy -= 1;
+			else this.Energy -= 0.5;
+
+			Trace.WriteLine(String.Format("++ {0} energy: {1}",this.Name,this.Energy));
+
 
 			return choice;
 		}

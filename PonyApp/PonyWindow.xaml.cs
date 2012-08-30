@@ -142,10 +142,39 @@ namespace PonyApp {
 
 			});
 
+			// update the menu system with actions this pony can do.
+			this.Pony.AvailableActions.ForEach(delegate(PonyAction a){
+				MenuItem item;
+
+				item = new MenuItem();
+				item.Header = String.Format("{0} {1}",a.ToString(),PonyDirection.Left.ToString());
+				item.Click += delegate(object del_s, RoutedEventArgs del_e) {
+					this.Pony.TellWhatDo(a,PonyDirection.Left,false);
+				};
+				this.OtherActions.Items.Add(item);
+
+				item = new MenuItem();
+				item.Header = String.Format("{0} {1}", a.ToString(), PonyDirection.Right.ToString());
+				item.Click += delegate(object del_s, RoutedEventArgs del_e) {
+					this.Pony.TellWhatDo(a,PonyDirection.Right,false);
+				};
+				this.OtherActions.Items.Add(item);
+			});
+
 		}
 
 		private void OnWindowClosed(object sender, EventArgs e) {
 			Main.StopPony(this.Pony);
+		}
+
+		private void OnClick(object sender, MouseButtonEventArgs e) {
+			if(this.Pony.Action == PonyAction.Sleep) {
+				this.Pony.TellWhatDo(
+					PonyAction.Stand,
+					this.Pony.Direction,
+					false
+				);				
+			}
 		}
 
 		private void OnDoubleClick(object sender, MouseButtonEventArgs e) {
@@ -154,6 +183,7 @@ namespace PonyApp {
 		}
 
 		private void OnMouseOver(object sender, MouseEventArgs e) {
+			if(this.Pony.Action == PonyAction.Sleep) return;
 			if(this.Pony.Mode == PonyMode.Still) return;
 
 			this.Pony.TellWhatDo(
@@ -164,6 +194,7 @@ namespace PonyApp {
 		}
 
 		private void OnMouseOut(object sender, MouseEventArgs e) {
+			if(this.Pony.Action == PonyAction.Sleep) return;
 			if(this.Pony.Mode == PonyMode.Still) return;
 
 			this.Pony.TellWhatDo(

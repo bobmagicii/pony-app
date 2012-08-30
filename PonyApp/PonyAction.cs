@@ -13,7 +13,8 @@ namespace PonyApp {
 		Passive1,  // a passive ponyality action.
 		Gallop,    // sprinting across the screen.
 		Teleport,  // teleporting somewhere else.
-		Teleport2  // teleporting in animation. (not directly callable)
+		Teleport2, // teleporting in animation. (not directly callable)
+		Sleep      // sleeping animation
 	}
 
 	public enum PonyActionActive {
