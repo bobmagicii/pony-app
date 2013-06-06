@@ -47,6 +47,11 @@ namespace PonyApp {
 		private double Energy { get; set; }
 
 		/// <summary>
+		/// 
+		/// </summary>
+		private double EnergyMax { get; set; }
+
+		/// <summary>
 		/// if she should sleep depending on the time of day (and night).
 		/// </summary>
 		public bool SleepTOD { get; set; }
@@ -129,8 +134,10 @@ namespace PonyApp {
 			this.Name = config.Name;
 			this.YOffset = config.YOffset;
 			this.Ponyality = config.Ponyality;
-			this.Energy = 400;
 			this.SleepTOD = true;
+
+			this.EnergyMax = 600;
+			this.EnergyReset();
 
 			// prepare available action lists. copy on purpose.
 			this.AvailableActions = new List<PonyAction>(config.Actions);
@@ -287,6 +294,13 @@ namespace PonyApp {
 		/// </summary>
 		public void ChooseWhatDo() {
 			PonyState choice;
+
+            // testing resetting the toplevelness since windows tends to get
+            // confused about what is what when things go fullscreen.
+            if (this.Window.Topmost) {
+                this.Window.Topmost = false;
+                this.Window.Topmost = true;
+            }
 
 			// if it is late (or early) the pony should sleep like anypony
 			// would. the 15-30min choice timer will still engage so at most
@@ -495,13 +509,13 @@ namespace PonyApp {
 						choice.Action = this.DecideFromPassiveActions().Action;
 					} else {
 						choice.Action = PonyAction.Sleep;
-						this.Energy = 400;
+						this.EnergyReset();
 					}
 
 					return choice;
 				} else {
 					// else just reset it.
-					this.Energy = 400;
+					this.EnergyReset();
 				}
 			}
 
@@ -690,7 +704,7 @@ namespace PonyApp {
 		/// reset her energy reserve.
 		/// </summary>
 		public void EnergyReset() {
-			this.Energy = 400;
+			this.Energy = this.EnergyMax;
 		}
 
 		/// <summary>
