@@ -111,6 +111,11 @@ namespace PonyApp {
 
 		}
 
+		public void AnimationDone(Object obj, RoutedEventArgs e) {
+			Trace.WriteLine(String.Format("$$$$$ animation end"));
+			return;
+		}
+
 		public static void LoopCount(PonyWindow win, double count) {
 			ImageBehavior.SetRepeatBehavior(
 				win.Image,
