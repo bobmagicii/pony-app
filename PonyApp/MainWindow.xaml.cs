@@ -76,6 +76,9 @@ namespace PonyApp {
 		public MainWindow() {
 			InitializeComponent();
 
+			string[] args = Environment.GetCommandLineArgs();
+			bool cmdpony = false;
+
 			// find anypony that is available.
 			PonyConfig.FindEverypony();
 			Trace.WriteLine(String.Format(
@@ -84,7 +87,22 @@ namespace PonyApp {
 			));
 
 			// go pony go.
-			Main.StartPony("Twilight Sparkle");
+		
+			// check to see if any ponies were specified on the command line.
+			if (args.Length > 1) {
+				foreach (string arg in args) {
+					if (PonyConfig.List.Exists(delegate(PonyConfig pc) {
+						return (pc.Name == arg);
+					})) {
+						cmdpony = true;
+						Main.StartPony(arg);
+					}
+				}
+			}
+
+			// if the command line did not successfully spawn ponies then start one now.
+			if(!cmdpony) Main.StartPony("Twilight Sparkle");
+
 		}
 
 	}
