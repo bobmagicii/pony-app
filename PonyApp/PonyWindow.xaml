@@ -9,6 +9,8 @@
 				<ContextMenu Name="MainMenu" Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
 					<MenuItem Name="Menu_PonyName" IsEnabled="False" />
 					<Separator />
+					<MenuItem Name="WakeUp" Header="Wake up in the morning"  IsCheckable="True" Click="MorningInPonyville" />
+					<Separator />
 					<MenuItem Name="StandLeft" Header="Stand off to the Left" IsCheckable="True" Click="TellHoldToLeft" />
 					<MenuItem Name="StandRight" Header="Stand off to the Right" IsCheckable="True" Click="TellHoldToRight" />
 					<MenuItem Name="BeFree" Header="PONY BE FREE"  IsCheckable="True" Click="TellHasFreedom" />

@@ -15,6 +15,7 @@ using WpfAnimatedGif;
 using System.Windows.Media.Animation;
 using System.Drawing;
 using System.IO;
+using SimpleMaid;
 
 namespace PonyApp {
 
@@ -233,6 +234,9 @@ namespace PonyApp {
 			this.TopmostPony.IsChecked = this.Topmost;
 			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
+      // decide the wake up checkbox
+      this.WakeUp.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, System.Windows.Forms.Application.ExecutablePath);
+
 /*
 			// fade out the other ponies.
 			Main.PonyList.ForEach(delegate(Pony p){
@@ -252,6 +256,15 @@ namespace PonyApp {
 			});
 */
 
+		}
+
+		private void MorningInPonyville(object sender, RoutedEventArgs e)
+		{
+			Trace.WriteLine("## telling pony to wake up when the system starts");
+			if (this.WakeUp.IsChecked)
+				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, System.Windows.Forms.Application.ExecutablePath);
+			else
+				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName);
 		}
 
 		private void TellHoldToRight(object sender, RoutedEventArgs e) {
