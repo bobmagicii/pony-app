@@ -260,8 +260,8 @@ namespace PonyApp {
 
 		private void MorningInPonyville(object sender, RoutedEventArgs e)
 		{
-			Trace.WriteLine("## telling pony to wake up when the system starts");
-			if (this.WakeUp.IsChecked)
+			Trace.WriteLine("## launching pony app when the system starts");
+			if (this.AutorunStartup.IsChecked)
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, System.Windows.Forms.Application.ExecutablePath);
 			else
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName);
