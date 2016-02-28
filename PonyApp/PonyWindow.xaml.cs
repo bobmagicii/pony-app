@@ -22,6 +22,7 @@ namespace PonyApp {
 	public partial class PonyWindow:Window {
 
 		public Pony Pony;
+		public string Ponies;
 		public PonyIcon Tray;
 
 		public PonyWindow(Pony Pony) {
@@ -235,7 +236,8 @@ namespace PonyApp {
 			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
 			// decide the wake up checkbox
-			this.AutorunStartup.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, System.Windows.Forms.Application.ExecutablePath);
+			UpdatePoniesString();
+			this.AutorunStartup.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
 
 /*
 			// fade out the other ponies.
@@ -258,11 +260,23 @@ namespace PonyApp {
 
 		}
 
+		private void UpdatePoniesString()
+		{
+			Ponies = String.Empty;
+			int tempPonyCount = Main.PonyList.Count;
+			for (int i = tempPonyCount - 1; i >= 0; i--)
+			{
+				Ponies += $"\"{Main.PonyList[i].Name}\" ";
+			}
+		}
+
 		private void MorningInPonyville(object sender, RoutedEventArgs e)
 		{
 			Trace.WriteLine("## launching pony app when the system starts");
 			if (this.AutorunStartup.IsChecked)
-				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, System.Windows.Forms.Application.ExecutablePath);
+			{
+				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
+			}
 			else
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName);
 		}
