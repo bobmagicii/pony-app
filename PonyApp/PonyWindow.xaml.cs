@@ -234,8 +234,8 @@ namespace PonyApp {
 			this.TopmostPony.IsChecked = this.Topmost;
 			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
-      // decide the wake up checkbox
-      this.WakeUp.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, System.Windows.Forms.Application.ExecutablePath);
+			// decide the wake up checkbox
+			this.WakeUp.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, System.Windows.Forms.Application.ExecutablePath);
 
 /*
 			// fade out the other ponies.
