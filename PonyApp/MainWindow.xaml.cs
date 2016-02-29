@@ -19,7 +19,7 @@ using WpfAnimatedGif;
 
 namespace PonyApp {
 
-	class Main {
+	static class Main {
 
 		/// <summary>
 		/// a list of all ponies that are currently running around on the
@@ -68,6 +68,17 @@ namespace PonyApp {
 			if(Main.PonyList.Count == 0) {
 				Application.Current.Shutdown();
 			}
+		}
+
+		public static string ToPoniesString(this List<Pony> PonyList) {
+			string ponies = String.Empty;
+
+			for (int i = Main.PonyList.Count - 1; i >= 0; i--)
+			{
+				ponies += $"\"{Main.PonyList[i].Name}\" ";
+			}
+
+			return ponies;
 		}
 	}
 

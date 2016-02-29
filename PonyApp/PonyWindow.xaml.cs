@@ -236,7 +236,7 @@ namespace PonyApp {
 			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
 			// decide the wake up checkbox
-			UpdatePoniesString();
+			Ponies = Main.PonyList.ToPoniesString();
 			this.AutorunStartup.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
 
 
@@ -258,15 +258,6 @@ namespace PonyApp {
 			});
 
 
-		}
-
-		private void UpdatePoniesString()
-		{
-			Ponies = String.Empty;
-			for (int i = Main.PonyList.Count - 1; i >= 0; i--)
-			{
-				Ponies += $"\"{Main.PonyList[i].Name}\" ";
-			}
 		}
 
 		private void MorningInPonyville(object sender, RoutedEventArgs e)
