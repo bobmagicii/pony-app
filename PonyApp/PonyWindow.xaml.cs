@@ -260,15 +260,21 @@ namespace PonyApp {
 			BringPoniesIntoView();
 		}
 
-		private void MorningInPonyville(object sender, RoutedEventArgs e)
+		private void UpdatePoniesAutorun()
 		{
-			Trace.WriteLine("## launching pony app when the system starts");
 			if (this.AutorunStartup.IsChecked)
 			{
+				Ponies = Main.PonyList.ToPoniesString();
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
 			}
 			else
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName);
+		}
+
+		private void MorningInPonyville(object sender, RoutedEventArgs e)
+		{
+			Trace.WriteLine("## launching pony app when the system starts");
+			UpdatePoniesAutorun();
 		}
 
 		private void TellHoldToRight(object sender, RoutedEventArgs e) {
@@ -313,10 +319,12 @@ namespace PonyApp {
 
 		private void OnAddPony(string name) {
 			Main.StartPony(name);
+			UpdatePoniesAutorun();
 		}
 
 		private void OnChangePony(string name) {
 			Main.StartPony(name);
+			UpdatePoniesAutorun();
 			this.OnClosePony();
 		}
 
