@@ -263,8 +263,7 @@ namespace PonyApp {
 		private void UpdatePoniesString()
 		{
 			Ponies = String.Empty;
-			int tempPonyCount = Main.PonyList.Count;
-			for (int i = tempPonyCount - 1; i >= 0; i--)
+			for (int i = Main.PonyList.Count - 1; i >= 0; i--)
 			{
 				Ponies += $"\"{Main.PonyList[i].Name}\" ";
 			}
