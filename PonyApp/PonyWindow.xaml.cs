@@ -302,6 +302,9 @@ namespace PonyApp {
 
 		private void OnClosePony() {
 			this.Pony.Window.Close();
+
+			if (Main.PonyList.Count >= 1)
+				UpdatePoniesAutorun();
 		}
 
 		private void OnCloseAllPony(object sender, RoutedEventArgs e) {
