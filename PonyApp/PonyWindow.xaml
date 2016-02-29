@@ -22,11 +22,11 @@
 					<MenuItem Name="TopmostPony" Header="Stay on top" Click="OnTopmostPony" IsCheckable="True" />
 					<MenuItem Name="SleepTOD" Header="Sleep with Time of Day" Click="OnSleepTOD" IsCheckable="True" />
 					<Separator />
-					<MenuItem Header="Dismiss this Pony" Click="OnClosePony" />
+					<MenuItem Header="Dismiss Pony" Click="OnClosePony" />
 					<Separator />
 					<MenuItem Header="Exit" Click="OnCloseAllPony" />
 					<Separator />
-					<MenuItem Header="Cancel this menu" />
+					<MenuItem Header="Cancel menu" />
 				</ContextMenu>
 			</Image.ContextMenu>
 		</Image>
