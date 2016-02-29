@@ -24,7 +24,7 @@
 					<Separator />
 					<MenuItem Header="Dismiss this Pony" Click="OnClosePony" />
 					<Separator />
-					<MenuItem Header="Dismiss all the Pony" Click="OnCloseAllPony" />
+					<MenuItem Header="Exit" Click="OnCloseAllPony" />
 					<Separator />
 					<MenuItem Header="Cancel this menu" />
 				</ContextMenu>
