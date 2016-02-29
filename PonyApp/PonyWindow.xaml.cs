@@ -260,8 +260,7 @@ namespace PonyApp {
 			BringPoniesIntoView();
 		}
 
-		private void UpdatePoniesAutorun()
-		{
+		private void UpdatePoniesAutorun() {
 			if (this.AutorunStartup.IsChecked)
 			{
 				Ponies = Main.PonyList.ToPoniesString();
@@ -271,8 +270,7 @@ namespace PonyApp {
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName);
 		}
 
-		private void MorningInPonyville(object sender, RoutedEventArgs e)
-		{
+		private void MorningInPonyville(object sender, RoutedEventArgs e) {
 			Trace.WriteLine("## launching pony app when the system starts");
 			UpdatePoniesAutorun();
 		}
