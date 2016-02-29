@@ -173,6 +173,7 @@ namespace PonyApp {
 		}
 
 		private void OnWindowClosed(object sender, EventArgs e) {
+			BringPoniesIntoView();
 			Main.StopPony(this.Pony);
 		}
 
@@ -249,15 +250,14 @@ namespace PonyApp {
 			
 		}
 
-		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
-
-
-			// bring all the ponies to full.
-			Main.PonyList.ForEach(delegate(Pony p) {
+		private void BringPoniesIntoView() {
+			Main.PonyList.ForEach(delegate (Pony p) {
 				p.Window.Opacity = 1.0;
 			});
+		}
 
-
+		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
+			BringPoniesIntoView();
 		}
 
 		private void MorningInPonyville(object sender, RoutedEventArgs e)
