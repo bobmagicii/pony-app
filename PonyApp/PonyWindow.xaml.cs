@@ -239,24 +239,24 @@ namespace PonyApp {
 			UpdatePoniesString();
 			this.AutorunStartup.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
 
-/*
+
 			// fade out the other ponies.
 			Main.PonyList.ForEach(delegate(Pony p){
 				p.Window.Opacity = 0.4;
 			});
 			this.Opacity = 1.0;
-*/
+
 			
 		}
 
 		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
 
-/*
+
 			// bring all the ponies to full.
 			Main.PonyList.ForEach(delegate(Pony p) {
 				p.Window.Opacity = 1.0;
 			});
-*/
+
 
 		}
 
