@@ -260,10 +260,10 @@ namespace PonyApp {
 			BringPoniesIntoView();
 		}
 
-		private void UpdatePoniesAutorun() {
+		private void UpdatePoniesAutorun(string ponyList = null) {
 			if (this.AutorunStartup.IsChecked)
 			{
-				Ponies = Main.PonyList.ToPoniesString();
+				Ponies = ponyList ?? Main.PonyList.ToPoniesString();
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
 			}
 			else
@@ -309,12 +309,16 @@ namespace PonyApp {
 
 		private void OnCloseAllPony(object sender, RoutedEventArgs e) {
 
+			string tempPonies = Ponies;
+
 			// I couldn't .ForEach the list because it was getting modified
 			// by StopPony which was messing this up, lol.
 
 			while(Main.PonyList.Count > 0) {
 				Main.PonyList[0].Window.OnClosePony();
 			}
+
+			UpdatePoniesAutorun(tempPonies); // HACK: Returns autorun to what it was before OnCloseAllPony got invoked
 
 		}
 
