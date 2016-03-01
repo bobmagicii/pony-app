@@ -73,7 +73,7 @@ namespace PonyApp {
 		public static string ToPoniesString(this List<Pony> PonyList) {
 			string ponies = String.Empty;
 
-			for (int i = Main.PonyList.Count - 1; i >= 0; i--)
+			for (int i = 0; i < Main.PonyList.Count; i++)
 			{
 				ponies += $"\"{Main.PonyList[i].Name}\" ";
 			}
