@@ -110,6 +110,9 @@
     <Compile Include="PonyWindow.xaml.cs">
       <DependentUpon>PonyWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SimpleApp.cs" />
+    <Compile Include="SimpleIO.cs" />
+    <Compile Include="SimplePlatform.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

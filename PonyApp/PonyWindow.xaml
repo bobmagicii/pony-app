@@ -9,6 +9,8 @@
 				<ContextMenu Name="MainMenu" Opened="OnContextMenuOpen" Closed="OnContextMenuClosed">
 					<MenuItem Name="Menu_PonyName" IsEnabled="False" />
 					<Separator />
+					<MenuItem Name="AutorunStartup" Header="Launch at system startup"  IsCheckable="True" Click="MorningInPonyville" />
+					<Separator />
 					<MenuItem Name="StandLeft" Header="Stand off to the Left" IsCheckable="True" Click="TellHoldToLeft" />
 					<MenuItem Name="StandRight" Header="Stand off to the Right" IsCheckable="True" Click="TellHoldToRight" />
 					<MenuItem Name="BeFree" Header="PONY BE FREE"  IsCheckable="True" Click="TellHasFreedom" />
@@ -20,11 +22,11 @@
 					<MenuItem Name="TopmostPony" Header="Stay on top" Click="OnTopmostPony" IsCheckable="True" />
 					<MenuItem Name="SleepTOD" Header="Sleep with Time of Day" Click="OnSleepTOD" IsCheckable="True" />
 					<Separator />
-					<MenuItem Header="Dismiss this Pony" Click="OnClosePony" />
+					<MenuItem Header="Dismiss Pony" Click="OnClosePony" />
 					<Separator />
-					<MenuItem Header="Dismiss all the Pony" Click="OnCloseAllPony" />
+					<MenuItem Header="Exit" Click="OnCloseAllPony" />
 					<Separator />
-					<MenuItem Header="Cancel this menu" />
+					<MenuItem Header="Cancel menu" />
 				</ContextMenu>
 			</Image.ContextMenu>
 		</Image>

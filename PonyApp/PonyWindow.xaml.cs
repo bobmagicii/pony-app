@@ -15,12 +15,14 @@ using WpfAnimatedGif;
 using System.Windows.Media.Animation;
 using System.Drawing;
 using System.IO;
+using SimpleMaid;
 
 namespace PonyApp {
 
 	public partial class PonyWindow:Window {
 
 		public Pony Pony;
+		public string Ponies;
 		public PonyIcon Tray;
 
 		public PonyWindow(Pony Pony) {
@@ -171,6 +173,7 @@ namespace PonyApp {
 		}
 
 		private void OnWindowClosed(object sender, EventArgs e) {
+			BringPoniesIntoView();
 			Main.StopPony(this.Pony);
 		}
 
@@ -233,25 +236,43 @@ namespace PonyApp {
 			this.TopmostPony.IsChecked = this.Topmost;
 			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
-/*
+			// decide the autorun checkbox
+			Ponies = Main.PonyList.ToPoniesString();
+			this.AutorunStartup.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
+
+
 			// fade out the other ponies.
 			Main.PonyList.ForEach(delegate(Pony p){
 				p.Window.Opacity = 0.4;
 			});
 			this.Opacity = 1.0;
-*/
+
 			
 		}
 
-		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
-
-/*
-			// bring all the ponies to full.
-			Main.PonyList.ForEach(delegate(Pony p) {
+		private void BringPoniesIntoView() {
+			Main.PonyList.ForEach(delegate (Pony p) {
 				p.Window.Opacity = 1.0;
 			});
-*/
+		}
 
+		private void OnContextMenuClosed(object sender, RoutedEventArgs e) {
+			BringPoniesIntoView();
+		}
+
+		private void UpdatePoniesAutorun(string ponies = null) {
+			if (this.AutorunStartup.IsChecked)
+			{
+				Ponies = ponies ?? Main.PonyList.ToPoniesString();
+				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
+			}
+			else
+				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName);
+		}
+
+		private void MorningInPonyville(object sender, RoutedEventArgs e) {
+			Trace.WriteLine("## launching pony app when the system starts");
+			UpdatePoniesAutorun();
 		}
 
 		private void TellHoldToRight(object sender, RoutedEventArgs e) {
@@ -281,9 +302,14 @@ namespace PonyApp {
 
 		private void OnClosePony() {
 			this.Pony.Window.Close();
+
+			if (Main.PonyList.Count >= 1)
+				UpdatePoniesAutorun();
 		}
 
 		private void OnCloseAllPony(object sender, RoutedEventArgs e) {
+
+			string tempPonies = Ponies;
 
 			// I couldn't .ForEach the list because it was getting modified
 			// by StopPony which was messing this up, lol.
@@ -292,14 +318,18 @@ namespace PonyApp {
 				Main.PonyList[0].Window.OnClosePony();
 			}
 
+			UpdatePoniesAutorun(tempPonies); // HACK: Returns autorun to what it was before OnCloseAllPony got invoked
+
 		}
 
 		private void OnAddPony(string name) {
 			Main.StartPony(name);
+			UpdatePoniesAutorun();
 		}
 
 		private void OnChangePony(string name) {
 			Main.StartPony(name);
+			UpdatePoniesAutorun();
 			this.OnClosePony();
 		}
 
