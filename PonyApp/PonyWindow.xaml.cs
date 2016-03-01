@@ -236,7 +236,7 @@ namespace PonyApp {
 			this.TopmostPony.IsChecked = this.Topmost;
 			this.SleepTOD.IsChecked = this.Pony.SleepTOD;
 
-			// decide the wake up checkbox
+			// decide the autorun checkbox
 			Ponies = Main.PonyList.ToPoniesString();
 			this.AutorunStartup.IsChecked = SimpleApp.VerifyAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
 
@@ -260,10 +260,10 @@ namespace PonyApp {
 			BringPoniesIntoView();
 		}
 
-		private void UpdatePoniesAutorun(string ponyList = null) {
+		private void UpdatePoniesAutorun(string ponies = null) {
 			if (this.AutorunStartup.IsChecked)
 			{
-				Ponies = ponyList ?? Main.PonyList.ToPoniesString();
+				Ponies = ponies ?? Main.PonyList.ToPoniesString();
 				SimpleApp.SwitchAutorun(System.Windows.Forms.Application.ProductName, $"{System.Windows.Forms.Application.ExecutablePath} {Ponies}");
 			}
 			else
